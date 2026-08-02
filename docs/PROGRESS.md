@@ -3,28 +3,28 @@
 ## 1. Current Status
 
 - Project phase: Domain foundation implementation
-- Current task: TASK-04
-- Current task title: Deterministic Arithmetic and Seed Primitives
-- Current task status: `ready_for_review`
+- Current task: TASK-05
+- Current task title: Initial State and Political Backgrounds
+- Current task status: `not_started`
 - Current branch: `main`
-- Foundation baseline commit: `d695484`
-- Latest verified implementation commit: `710dd88`
+- Foundation baseline commit: `6979c02`
+- Latest verified baseline commit: `6979c02`
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: TASK-04 deterministic arithmetic and seed primitives completed with local verification; review pending
-- Implementation tasks verified: 3 / 20
+- Last progress update: Repository history reconciled after TASK-01 through TASK-04 were reviewed, accepted, and consolidated into baseline commit `6979c02`
+- Implementation tasks verified: 4 / 20
 
-TASK-01 through TASK-03 are verified. TASK-04 deterministic arithmetic and seed primitives are ready for review; no preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is current but remains not started; no preview or production deployment exists.
 
 ## 2. Task Table
 
 | ID | Title | Phase | Status | Dependencies | Implementation commit | Verification evidence | Blocker |
 |---|---|---|---|---|---|---|---|
-| TASK-01 | Repository and Application Bootstrap | A | `verified` | None | `0058b60` | Local checks passed; implementation committed and verified | None |
-| TASK-02 | Design Tokens and Application Shell | A | `verified` | TASK-01 | `3fce51f` | Visual-reference revision complete; format, lint, typecheck, 9 unit/component tests, production build, Storybook build, and 7 production-mode E2E viewport projects passed; all required screenshots inspected | None |
-| TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `710dd88` | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation committed and verified | None |
-| TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `ready_for_review` | TASK-03 | None | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed | None |
+| TASK-01 | Repository and Application Bootstrap | A | `verified` | None | `6979c02` (consolidated baseline) | Local checks passed; implementation reviewed, accepted, and consolidated | None |
+| TASK-02 | Design Tokens and Application Shell | A | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Visual-reference revision complete; format, lint, typecheck, 9 unit/component tests, production build, Storybook build, and 7 production-mode E2E viewport projects passed; all required screenshots inspected | None |
+| TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
+| TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-05 | Initial State and Political Backgrounds | B | `not_started` | TASK-04 | None | None | None |
 | TASK-06 | Content Schemas, Registries, and Manifest | B | `not_started` | TASK-03 | None | None | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `not_started` | TASK-05, TASK-06 | None | None | None |
@@ -46,7 +46,9 @@ Foundation-document commits do not count as implementation-task completion.
 
 ## 3. Current Task Workspace
 
-### TASK-04 Completed Workspace Record
+The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-04 Historical Completed Workspace Record
 
 - Task ID: TASK-04
 - Objective: Implement canonical safe-integer arithmetic and versioned deterministic seeded-variation primitives for later game-system calculations.
@@ -72,7 +74,7 @@ Foundation-document commits do not count as implementation-task completion.
 - Final Git status: TASK-04 source, tests, exports, and tracker changes remain unstaged; no unrelated or generated file change, commit, or push was created.
 - Review decision: Ready for review
 
-### TASK-03 Completed Workspace Record
+### TASK-03 Historical Completed Workspace Record
 
 - Task ID: TASK-03
 - Objective: Translate the authoritative MVP state domains, identifiers, numeric units, family identity, version boundaries, root game state, and save contracts into strict TypeScript and Zod schemas.
@@ -95,7 +97,7 @@ Foundation-document commits do not count as implementation-task completion.
 - Final Git status: TASK-03 source, tests, and tracker changes remain unstaged; no unrelated or generated file change, commit, or push was created.
 - Review decision: Ready for review
 
-### TASK-02 Completed Workspace Record
+### TASK-02 Historical Completed Workspace Record
 
 - Task ID: TASK-02
 - Objective: Establish the design-token system, reusable application shell, state primitives, and a truthful premium presidential-office foundation page.
@@ -127,7 +129,7 @@ TASK-02 screenshot evidence:
 - `test-results/foundation-foundation-page-19907-ble-and-visually-reviewable-tablet-768x1024/foundation-page.png`
 - `test-results/foundation-foundation-page-19907-ble-and-visually-reviewable-mobile-390x844/foundation-page.png`
 
-### TASK-01 Completed Workspace Record
+### TASK-01 Historical Completed Workspace Record
 
 - Task ID: TASK-01
 - Objective: Initialize the real application foundation.
@@ -150,6 +152,8 @@ TASK-02 screenshot evidence:
 - Review decision: Ready for review
 
 ## 4. Evidence Log
+
+The rows below preserve historical command and acceptance evidence. Any pre-consolidation commit hash is historical context only; current repository history is represented by baseline `6979c02`.
 
 | Date or session | Task ID | Evidence type | Command or procedure | Environment | Result | Artifact or path | Reviewed by | Notes |
 |---|---|---|---|---|---|---|---|---|
@@ -223,7 +227,7 @@ Warnings cannot be accepted implicitly.
 | Post-deployment verification | Not evaluated |
 
 - Final release decision: Incomplete evaluation
-- Reason: Release evaluation remains outside TASK-02; this session completed only local TASK-02 implementation gates.
+- Reason: Release evaluation remains outside this documentation-only history reconciliation; no deployment or production gate was requested.
 
 ## 9. Progress Update Rules
 
@@ -242,10 +246,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-04 ready for review; TASK-01 through TASK-03 verified
-- Current task: TASK-04
-- Foundation baseline commit: `d695484`
-- Implementation tasks verified: 3 / 20
+- Implementation status: TASK-01 through TASK-04 verified; TASK-05 not started
+- Current task: TASK-05
+- Foundation baseline commit: `6979c02`
+- Implementation tasks verified: 4 / 20
 - Preview deployment: None
 - Production deployment: None
 - Release decision: Incomplete evaluation
