@@ -1142,6 +1142,110 @@ These first balancing values may change after simulation and playtesting. They a
 | Military presence | 68 |
 | Governor trust | 43 |
 
+## MVP Initial State Completion Decisions
+
+This section is authoritative for fields and collection contents that the provisional MVP starting baseline above previously omitted. Existing explicit values in section 31 remain authoritative and take precedence; the defaults below must never replace them. These are provisional MVP balance values. After initial-state implementation, they may change only through explicit save-, schema-, and content-version review as applicable.
+
+### Versions, Save Metadata, and Identity
+
+| Field | Initial value or rule |
+|---|---|
+| `revision` | `0` |
+| `saveVersion` | `save-1.0.0` |
+| `schemaVersion` | `schema-1.0.0` |
+| `contentVersion` | `mvp-0.1.0` |
+| `politicalPeriod` | `0` |
+| `difficulty` | `standard` |
+| `selectedBackground` | Exactly one validated canonical political-background ID supplied during new-game creation |
+| `familyIdentity` | The validated customized family identity supplied during new-game creation |
+| `saveId`, `ownerId`, `gameSeed`, `createdAt`, `updatedAt` | Validated explicit new-game inputs; initialization does not generate or infer them |
+
+The root `identity.selectedBackground`, root `identity.familyIdentity`, and root `timeline.politicalPeriod` match their indexed save metadata. The initial game seed is stored for later deterministic systems and does not vary any fixed initial value.
+
+### Previously Omitted Numeric State
+
+Economy initializes these exact `MoneyMinor` fields:
+
+| Field | Initial value |
+|---|---:|
+| `plannedArrearsPaymentMinor` | `0n` |
+| `periodFinancingInflowsMinor` | `0n` |
+| `periodProjectOutflowsMinor` | `0n` |
+
+Government initializes these bounded authored penalties:
+
+| Field | Initial value |
+|---|---:|
+| `activeScandalPenalty` | `0` |
+| `repressionPenalty` | `0` |
+| `publicCabinetConflictPenalty` | `0` |
+
+### Factions, Characters, and Relationships
+
+Every canonical faction uses its explicit section 31 values and additionally initializes:
+
+- `mobilization: 0`
+- zero red-line violations, represented by `redLineViolations: []` in the TASK-03 collection contract
+- `memoryIds: []`
+- `regionalInfluence` with every canonical region present at `0`
+
+The specification-owner value “red-line violations: 0” is a zero-count decision, not a new numeric state field. The runtime field remains the documented collection of violation IDs.
+
+Every required canonical character initializes with `availability: active` and `memoryIds: []`.
+
+Every required canonical character relationship with no more-specific explicit starting score initializes with:
+
+| Field | Neutral initial value |
+|---|---:|
+| `trust` | `50` |
+| `respect` | `50` |
+| `fear` | `0` |
+| `ideologicalAlignment` | `0` |
+| `personalLeverage` | `0` |
+| `publicRelationship` | `50` |
+| `privateRelationship` | `50` |
+
+Every such relationship initializes `temporaryMemoryIds: []` and `permanentMemoryIds: []`. `affection` is `50` only for a relationship explicitly modeled as a family relationship. The current canonical NPC relationship entries are not family relationships, so they omit the optional affection field; first-family trust remains governed by the explicit family baseline.
+
+### Regions, Family, Cabinet, and Collections
+
+Every canonical region uses its explicit section 31 values and additionally initializes:
+
+- `dominantFactionInfluences` with every canonical faction present at `0`
+- `activeProjectIds: []`
+- `activeCrisisIds: []`
+
+Family initializes `memoryIds: []` in addition to its explicit section 31 values.
+
+The initial cabinet has zero members. In the TASK-03 runtime contract, the cabinet is the member-ID collection itself, so this decision is represented as `cabinet: []`; it does not introduce a nested `members` field.
+
+The following initial collections are empty:
+
+- `lawsAndMeasures: []`
+- `flags: []`
+- `eventHistory: []`
+- `pendingEvents: []`
+- `delayedEffects: []`
+- `media: []`
+- `memories: []`
+
+### Outcome and Empty Root Domains
+
+The semantic initial outcome is `resolvedOutcomeId: null` and `resolvedAtPeriod: null`. The TASK-03 runtime contract represents the unresolved state as `outcomeState: {}` because its corresponding `selectedOutcomeId` and `resolvedAtPeriod` fields are optional and absent until resolution. `resolvedOutcomeId` here names the specification decision and does not add or rename a runtime field.
+
+The fieldless TASK-03 root domains initialize as `national: {}` and `debugMetadata: {}`. No debug-only value is added to player state.
+
+### Complete Root Initialization Rule
+
+Every root-state domain now has an authoritative initialization source:
+
+- `metadata`, `identity`, and `timeline` use the values and validated inputs in this section.
+- `national` and `debugMetadata` use the strict empty objects defined above.
+- `economy`, `government`, `security`, `international`, `factions`, `regions`, and `family` combine the explicit section 31 baseline with only the omitted-field decisions in this section.
+- `characters`, `relationships`, `cabinet`, `memories`, `lawsAndMeasures`, `flags`, `eventHistory`, `pendingEvents`, `delayedEffects`, `media`, and `outcomeState` use the rules in this section.
+
+No neutral default may override an explicit baseline value, no later derived formula runs during initialization, and no undocumented collection member is implied.
+
 ## 32. Save and Persistence Contract
 
 Every save includes save ID, owner ID, save version, content version, revision, game seed, political period, created and updated timestamps, selected background, customizable family identity, authoritative game state, resolved-choice history, delayed effects, memories, and outcome state.

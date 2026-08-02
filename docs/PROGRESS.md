@@ -12,10 +12,10 @@
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: Repository history reconciled after TASK-01 through TASK-04 were reviewed, accepted, and consolidated into baseline commit `6979c02`
+- Last progress update: TASK-05 initial-state specification completed from specification-owner decisions; implementation remains not started
 - Implementation tasks verified: 4 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is current but remains not started; no preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is current but remains not started; its prior specification blocker is resolved, and no preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -25,7 +25,7 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-02 | Design Tokens and Application Shell | A | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Visual-reference revision complete; format, lint, typecheck, 9 unit/component tests, production build, Storybook build, and 7 production-mode E2E viewport projects passed; all required screenshots inspected | None |
 | TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
-| TASK-05 | Initial State and Political Backgrounds | B | `not_started` | TASK-04 | None | None | None |
+| TASK-05 | Initial State and Political Backgrounds | B | `not_started` | TASK-04 | None | Initial-state authority inventory completed; specification-owner decisions added to `SYSTEMS_DESIGN.md`; no domain code changed | None |
 | TASK-06 | Content Schemas, Registries, and Manifest | B | `not_started` | TASK-03 | None | None | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `not_started` | TASK-05, TASK-06 | None | None | None |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `not_started` | TASK-05, TASK-07 | None | None | None |
@@ -47,6 +47,24 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-05 Specification Completion Workspace Record
+
+- Task ID: TASK-05
+- Objective: Complete the authoritative provisional MVP initial-state specification without implementing TASK-05 source code.
+- Scope confirmed: Yes; limited to `docs/SYSTEMS_DESIGN.md` and this tracker. TASK-05 code and TASK-06 or later content, scheduling, mutation, formula, persistence, and UI work were not started.
+- Repository state: The prior TASK-05 implementation attempt began clean on `main` at required HEAD `2a9a9d4`. This specification-completion session inherited only the expected unstaged blocked-session update to `docs/PROGRESS.md`; no source change was present.
+- Prior verification: The blocked implementation session passed `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e`; 9 files and 204 unit tests plus all 7 configured E2E viewport projects passed. Each build-generated `next-env.d.ts` route-reference change was restored.
+- Authority confirmed: `SYSTEMS_DESIGN.md` supplies political period `0`, Standard difficulty, fixed baseline values for the listed economy, government, security, international, family, three-faction, and four-region fields, and the exact four background modifier sets with apply-once and clamp-after-application requirements. `CONTENT_ARCHITECTURE.md` supplies content version `mvp-0.1.0`.
+- Prior blocking gaps: The initial authority audit found missing numeric fields, relationship scores, collection contents, cabinet membership, starting revision, and supported save/schema versions. No source implementation was attempted while those decisions were absent.
+- Specification completion: `SYSTEMS_DESIGN.md` now defines revision `0`; versions `save-1.0.0`, `schema-1.0.0`, and `mvp-0.1.0`; period `0`; Standard difficulty; every previously omitted numeric field; every required relationship default; character, faction, region, family, cabinet, collection, empty-domain, and outcome initialization rule; explicit-input metadata; and fixed-seed behavior.
+- Contract reconciliation: Zero red-line violations is represented by the existing empty violation-ID collection, zero cabinet members by the existing empty cabinet ID collection, and the semantic null outcome by the TASK-03 unresolved `outcomeState: {}` representation. These decisions add no competing runtime field.
+- Authority decision: Existing explicit section 31 values take precedence. Neutral values fill only previously omitted required fields. The completed values are provisional MVP balance and require explicit version review before later changes.
+- Background review: The four documented modifier definitions remain complete and structurally distinct. The completed baseline now permits a future TASK-05 implementation to apply them without inventing omitted state. Balance remains `Structurally differentiated; balance unmeasured`.
+- Files changed: `docs/SYSTEMS_DESIGN.md` and `docs/PROGRESS.md` only. No source, schema, test, UI, configuration, dependency, content, database, Supabase, SQL, migration, environment, or skill file changed.
+- Current verification: `pnpm format:check` and `git diff --check` passed; the complete two-document diff was inspected; final status contains only the two authorized documentation files.
+- Blocker resolution: Completed by the authoritative `MVP Initial State Completion Decisions` section. Every current TASK-03 root-state field now has an initialization rule, the active blocker is removed, and TASK-05 returns to `not_started` pending a separate implementation request.
+- Review decision: Ready for review
 
 ### TASK-04 Historical Completed Workspace Record
 
@@ -179,6 +197,10 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-03 | TASK-04 | Arithmetic and deterministic-seed tests | Fixed safe-integer, BigInt, hash, sample, rejection, variation, and explanation fixtures; `pnpm format:check`; `pnpm lint`; `pnpm typecheck`; `pnpm test` | TypeScript 5.9.3 / Zod 4.4.3 / Vitest 4.1.10 | Passed: 9 files and 204 tests | `src/domain/arithmetic/**`, `src/domain/random/**` | Codex | Includes 97 new TASK-04 tests; initial fixture typing and formatting findings were corrected and final checks passed. |
 | 2026-08-03 | TASK-04 | Build and browser regression | `pnpm build`; `pnpm test:e2e` | Next.js 16.2.12 / Playwright 1.62.1 | Passed: production build and 7 viewport projects | Existing foundation application and `e2e/foundation.spec.ts` | Codex | No visible UI changed; existing browser surface remained green. |
 | 2026-08-03 | TASK-04 | Scope and integrity | Direct-randomness, dependency, premature-formula, suppression, unsafe-cast, credential, nested-Git, generated-output, changed-file, UI-integrity, `git diff --check`, and status scans | Local Git worktree | Passed | TASK-04 domain files, `src/domain/index.ts`, and `docs/PROGRESS.md` only | Codex | No TASK-05, production formula, content, persistence, UI, staging, commit, or push. |
+| 2026-08-03 | TASK-05 | Preflight and baseline | Repository root, `.git`, complete governing documents and three activated skills with references, complete domain tree, clean status, log and branch verification; frozen install, format, lint, typecheck, unit test, and production build | Local Windows | Passed at required HEAD `2a9a9d4`; 9 files and 204 tests passed | Repository root | Codex | Baseline build regenerated `next-env.d.ts`; the generated route-reference line was restored before the tracker update. |
+| 2026-08-03 | TASK-05 | Authority audit | Compared every strict TASK-03 root/save field with `SYSTEMS_DESIGN.md`, `CONTENT_ARCHITECTURE.md`, and canonical entities from `STORY_BIBLE.md` | Local repository | Blocked before domain implementation | `docs/SYSTEMS_DESIGN.md`, `src/domain/schemas/**` | Codex | Required starting values, collection contents, revision, and supported save/schema literals are absent; schema test fixtures were explicitly rejected as authority. |
+| 2026-08-03 | TASK-05 | Final repository verification | Frozen install, format, lint, typecheck, 204-test unit suite, production build, 7-project E2E suite, diff check, changed-path and boundary scans | Local Windows | Passed; no implementation was present to validate | `docs/PROGRESS.md` only | Codex | Repository health is green, but the authority blocker prevents TASK-05 acceptance. No implementation test was added or claimed. |
+| 2026-08-03 | TASK-05 | Specification completion | Added authoritative missing-field, collection, metadata, relationship, and schema-representation decisions; reconciled tracker state without source implementation | Local repository | Ready for documentation review | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Codex | Existing explicit baseline values remain unchanged; TASK-05 returned to `not_started`; verified count remains 4 / 20. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -186,6 +208,8 @@ An unexecuted command must not be entered as passed evidence.
 
 | Decision ID | Date | Task | Decision | Reason | Alternatives considered | Affected documents or code | Owner | Follow-up |
 |---|---|---|---|---|---|---|---|---|
+| DEC-005 | 2026-08-03 | TASK-05 | Stop before implementation | A complete strict initial save requires values that the user-designated sole authority does not define | Guess zero/empty/50 values; reuse TASK-03 schema fixtures; derive later formulas; expose a partial initializer | `docs/PROGRESS.md` only | Codex | Add authoritative baseline values and supported version literals, then restart TASK-05 from a clean tree |
+| DEC-006 | 2026-08-03 | TASK-05 | Adopt specification-owner initial-state completion decisions | The decisions fill every previously omitted required field without replacing explicit baseline values | Leave blocker open; modify schemas; encode assumptions only in implementation | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Specification owner | Review and commit documentation separately before requesting TASK-05 implementation |
 
 Use this log for deliberate deviations from the roadmap or authoritative documents.
 
@@ -193,6 +217,7 @@ Use this log for deliberate deviations from the roadmap or authoritative documen
 
 | Blocker ID | Task | Severity | Description | Evidence | Owner | Required resolution | Status |
 |---|---|---|---|---|---|---|---|
+| BLK-005 | TASK-05 | Blocking | The provisional baseline could not satisfy the strict TASK-03 root/save schemas without inventing multiple required values and collections; starting revision and supported save/schema literals were also unspecified | Prior authority audit against `SYSTEMS_DESIGN.md` section 31 and TASK-03 schemas | Specification owner | Completed in `MVP Initial State Completion Decisions` | Resolved |
 
 A blocker remains in the history even if work moves to another task.
 
