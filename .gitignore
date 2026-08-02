@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+coverage/
+storybook-static/
+playwright-report/
+test-results/
+.artifacts/
+*.tsbuildinfo
+
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db
+

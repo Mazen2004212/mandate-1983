@@ -1,0 +1,9 @@
+.next
+.agents
+AGENTS.md
+coverage
+docs
+node_modules
+playwright-report
+storybook-static
+test-results
