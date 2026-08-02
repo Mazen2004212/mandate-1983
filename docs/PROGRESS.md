@@ -5,17 +5,17 @@
 - Project phase: Domain foundation implementation
 - Current task: TASK-05
 - Current task title: Initial State and Political Backgrounds
-- Current task status: `not_started`
+- Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
 - Latest verified baseline commit: `6979c02`
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: TASK-05 initial-state specification completed from specification-owner decisions; implementation remains not started
+- Last progress update: TASK-05 initialization implementation and full local verification completed; ready for review
 - Implementation tasks verified: 4 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is current but remains not started; its prior specification blocker is resolved, and no preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is ready for review from the reviewed specification baseline `5669f68`; no preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -25,7 +25,7 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-02 | Design Tokens and Application Shell | A | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Visual-reference revision complete; format, lint, typecheck, 9 unit/component tests, production build, Storybook build, and 7 production-mode E2E viewport projects passed; all required screenshots inspected | None |
 | TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
-| TASK-05 | Initial State and Political Backgrounds | B | `not_started` | TASK-04 | None | Initial-state authority inventory completed; specification-owner decisions added to `SYSTEMS_DESIGN.md`; no domain code changed | None |
+| TASK-05 | Initial State and Political Backgrounds | B | `ready_for_review` | TASK-04 | None | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed | None |
 | TASK-06 | Content Schemas, Registries, and Manifest | B | `not_started` | TASK-03 | None | None | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `not_started` | TASK-05, TASK-06 | None | None | None |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `not_started` | TASK-05, TASK-07 | None | None | None |
@@ -47,6 +47,33 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-05 Implementation Workspace Record
+
+- Task ID: TASK-05
+- Objective: Implement the complete authoritative provisional MVP baseline, four political-background modifier definitions, apply-once protection, and a pure deterministic new-game save factory.
+- Scope confirmed: Yes; limited to TASK-05. No content registry, scenario, scheduler, mutation engine, period formula, persistence, Supabase, authentication, database, migration, production content, or UI work was started.
+- Initial Git status: Clean on `main` at actual canonical HEAD `5669f68`, tracking `origin/main`. The prompt's literal HEAD placeholder was resolved from the repository; the commit contains the reviewed `MVP Initial State Completion Decisions`. TASK-01 through TASK-04 were verified and TASK-05 was `not_started`.
+- Baseline verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` passed before editing; 9 files and 204 tests passed. The build-generated `next-env.d.ts` route-reference change was restored.
+- Files changed: Added focused initialization constants, fresh-state factory, immutable background definitions, apply-once workflow and errors, strict new-game input/save factory, and 36 deterministic tests under `src/domain/initialization`; updated the intentional `src/domain/index.ts` export surface and this tracker only.
+- Baseline authority: Section 31 explicit economy, government, security, international, family, faction, and regional values take precedence. `MVP Initial State Completion Decisions` supplies only previously omitted values, collections, metadata, relationship defaults, empty root domains, and schema-compatible cabinet, red-line, and outcome representations.
+- Money and units: VRC baseline amounts convert exactly to BigInt Crown cents: treasury `4800000000n`, revenue `1220000000n`, expenditure `1380000000n`, debt service `140000000n`, arrears `240000000n`, and all three omitted period-flow fields `0n`. Basis points and normalized scores remain exact integers.
+- Background definitions: The exact four stable IDs have 21 immutable modifier entries and no labels, prose, ideology, recurring effects, eligibility, or undocumented benefits. Every definition has at least one documented positive and negative effect, unique complete field/delta sets, and schema-valid canonical targets.
+- Apply-once design: The public `createNewGame` API owns baseline creation plus one selected-background application. An internal initialization draft carries an explicit nullable applied-background marker outside authoritative state; a second application throws `DuplicatePoliticalBackgroundError`, and a mismatched selection throws `PoliticalBackgroundMismatchError`. No object identity, process-global registry, silent idempotency, or persistent marker is used.
+- Modifier behavior: Only immutable definition targets can change. Normalized-score changes use TASK-04 `clamp100`, final state is reparsed through the strict root schema, unknown public background IDs fail input validation, and fixed tests prove both upper and lower clamping.
+- Determinism and seed: All IDs, timestamps, versions, family identity, selected background, and seed are validated explicit inputs. No time, UUID, direct-random, Node-random, environment, request-order, or render dependency exists. Equal complete inputs produce deeply equal saves; retries do not reroll. The stored seed does not alter fixed initial values.
+- Versions and metadata: Save `save-1.0.0`, schema `schema-1.0.0`, and content `mvp-0.1.0` are closed input literals; revision is `0`, political period is `0`, and difficulty is `standard`. Unsupported versions and extra fields fail. Explicit timestamps must be valid and `updatedAt` cannot precede `createdAt`.
+- Validation and tests: Every final result passes `authoritativeSaveSchema`. The 36 new tests cover the complete root inventory, exact money/basis-point/normalized values, every canonical entity and collection, independent object graphs, all exact definitions and final values, no unrelated changes, clamping, apply-once and mismatch errors, validation failures, version closure, metadata preservation, deterministic retry, and fixed seed behavior.
+- Structural trade-off review: Every background is structurally differentiated and contains its documented advantages and disadvantages. Balance status: `Structurally differentiated; balance unmeasured`. No value was adjusted to force symmetry.
+- Content validation: Stable background IDs resolve through the existing closed enum; definition targets are a closed TypeScript union over existing TASK-03 fields and canonical entities. No authored scenario, manifest, reference graph, production prose, family token, media, asset, or publication object was introduced, so those content-publication checks are not applicable.
+- Verification executed: Final `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e` passed. Final unit result was 10 files and 240 tests; E2E passed all 7 existing production-mode Chromium viewport projects.
+- Scope and integrity: Direct-randomness, UUID, time-read, React, Next.js, browser API, suppression, broad-`any`, unsafe-cast, secret, dependency, Supabase, SQL/migration, UI/configuration, authoritative-document, skill, premature TASK-06 through TASK-09, staged-change, generated-artifact, and nested-`.git` checks found no relevant violation. Both build-generated `next-env.d.ts` changes were restored.
+- Findings corrected: Initial implementation typecheck found a duplicate content-version export, missing canonical key aliases, and incompatible Zod literal pipelines; later test typechecks caught a FlagId/MemoryId mismatch and an unbranded family-name mutation. Each was corrected without weakening production schemas. One scan command had a PowerShell quoting failure; it was rerun with safe patterns and passed.
+- Persistence and migration impact: None. The task creates versioned in-memory authoritative saves only; no repository, database, serialization transport, migration, ownership query, or browser projection was added.
+- Known limitations: Initialization only. The factory does not persist saves, generate inputs, schedule or resolve content, mutate an existing save, execute delayed effects, advance periods, calculate formulas, simulate balance, or expose a UI.
+- Rollback: Revert the unstaged TASK-05 initialization directory, domain export, and tracker change before downstream work. No published save or migration depends on this workspace.
+- Implementation commit: None.
+- Review decision: Ready for review
 
 ### TASK-05 Specification Completion Workspace Record
 
@@ -201,6 +228,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-03 | TASK-05 | Authority audit | Compared every strict TASK-03 root/save field with `SYSTEMS_DESIGN.md`, `CONTENT_ARCHITECTURE.md`, and canonical entities from `STORY_BIBLE.md` | Local repository | Blocked before domain implementation | `docs/SYSTEMS_DESIGN.md`, `src/domain/schemas/**` | Codex | Required starting values, collection contents, revision, and supported save/schema literals are absent; schema test fixtures were explicitly rejected as authority. |
 | 2026-08-03 | TASK-05 | Final repository verification | Frozen install, format, lint, typecheck, 204-test unit suite, production build, 7-project E2E suite, diff check, changed-path and boundary scans | Local Windows | Passed; no implementation was present to validate | `docs/PROGRESS.md` only | Codex | Repository health is green, but the authority blocker prevents TASK-05 acceptance. No implementation test was added or claimed. |
 | 2026-08-03 | TASK-05 | Specification completion | Added authoritative missing-field, collection, metadata, relationship, and schema-representation decisions; reconciled tracker state without source implementation | Local repository | Ready for documentation review | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Codex | Existing explicit baseline values remain unchanged; TASK-05 returned to `not_started`; verified count remains 4 / 20. |
+| 2026-08-03 | TASK-05 | Initialization implementation and local integration gate | Strict baseline/background/new-game implementation; frozen install, format, lint, typecheck, 240-test suite, production build, 7-project E2E, content-ID/field review, determinism, scope, secret, generated-output, and Git-integrity checks | Local Windows | Ready for review; all required commands passed | `src/domain/initialization/**`, `src/domain/index.ts`, `docs/PROGRESS.md` | Codex | 36 new tests; no persistence, migration, UI, production content, staging, commit, or push. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -271,7 +299,7 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-04 verified; TASK-05 not started
+- Implementation status: TASK-01 through TASK-04 verified; TASK-05 ready for review
 - Current task: TASK-05
 - Foundation baseline commit: `6979c02`
 - Implementation tasks verified: 4 / 20
