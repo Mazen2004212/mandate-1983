@@ -8,14 +8,14 @@
 - Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
-- Latest verified baseline commit: `6979c02`
+- Latest verified baseline commit: `0ba241f`
 - Preview URL: None
 - Production URL: None
-- Active blocker: None
-- Last progress update: TASK-05 verified at `0ba241f`; TASK-06 content contracts, registries, manifest, token validation, and reference validation are ready for review
+- Active blocker: BLK-007 — technically corrected in the unstaged TASK-06 amendment; remains open pending review and commit
+- Last progress update: TASK-06 corrective condition-contract amendment completed locally and returned to review; TASK-07 remains blocked pending acceptance
 - Implementation tasks verified: 5 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`; TASK-06 is ready for review with no implementation commit, and no preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. The original TASK-06 implementation exists at `2ff7d49`; its corrective condition-contract amendment is unstaged, uncommitted, and `ready_for_review`. TASK-07 remains blocked before implementation until that correction is reviewed and committed. No preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -26,8 +26,8 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-05 | Initial State and Political Backgrounds | B | `verified` | TASK-04 | `0ba241f` | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed; implementation reviewed and accepted | None |
-| TASK-06 | Content Schemas, Registries, and Manifest | B | `ready_for_review` | TASK-03 | None | Strict content contracts and immutable registry implemented; frozen install, format, lint, typecheck, 278-test suite, production build, and 7-project E2E regression passed | None |
-| TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `not_started` | TASK-05, TASK-06 | None | None | None |
+| TASK-06 | Content Schemas, Registries, and Manifest | B | `ready_for_review` | TASK-03 | `2ff7d49` (original implementation) | Corrective strict condition variants added locally; frozen install, format, lint, typecheck, 291-test suite, production build, and 7-project E2E regression passed | None |
+| TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `blocked` | TASK-05, TASK-06 | None | Clean preflight and 278-test regression baseline passed at `2ff7d49`; contract gap is technically corrected locally but awaits TASK-06 review and commit | BLK-007 |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `not_started` | TASK-05, TASK-07 | None | None | None |
 | TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `not_started` | TASK-04, TASK-05 | None | None | None |
 | TASK-10 | Supabase Foundation, Authentication, and RLS | C | `not_started` | TASK-03 | None | None | None |
@@ -48,6 +48,34 @@ Foundation-document commits do not count as implementation-task completion.
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
 
+### TASK-06 Corrective Condition-Contract Amendment Workspace Record
+
+- Task ID: TASK-06
+- Objective: Correct the accepted authored-condition contract so TASK-07 can later represent every required political-period, relationship, faction, faction-region, and regional eligibility condition without defining an alternate runtime contract.
+- Initial repository state: `main` at required HEAD `2ff7d49`, with only the expected unstaged TASK-07 blocker update in `docs/PROGRESS.md`; that prior documentation change was preserved.
+- Baseline verification: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` passed before source editing; 11 test files and 278 tests passed. The build-generated `next-env.d.ts` route reference was restored.
+- Contract correction: Added strict `political_period`, `relationship_score`, `faction_score`, `faction_regional_influence`, `region_score`, and `region_basis_points` condition variants. Every variant uses closed canonical identifiers, closed field allowlists, exact units, existing numeric operators, strict unknown-key rejection, and the existing expectation/range exclusivity rules.
+- Regional basis-point boundary: Removed `regions.unemploymentBps` from the generic basis-point field allowlist. Regional unemployment now requires the exact `region_basis_points` shape and reuses the authoritative 0–4,000 unemployment basis-point schema.
+- Registry integration: The existing registry validates the expanded discriminated union directly. No evaluator, runtime callback, condition graph, scheduler, mutation, effect execution, or TASK-07 source was added.
+- Focused tests: Added 13 tests covering all six variants, every closed score field, canonical and unknown IDs, operator expectations and ranges, unit boundaries, strict-object rejection, generic-path rejection, union integration, and precise registry issue paths. The focused result is 51 passing tests across the existing and corrective content-contract files.
+- Failure history: The first focused run had 50 passes and one failed fixture because its regional unemployment range used 10,000 basis points. The fixture was corrected to the authoritative 4,000 maximum; production validation was not widened or weakened.
+- Final verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e` passed. The full unit result was 12 files and 291 tests; all 7 existing production-mode Chromium viewport projects passed. The build-generated `next-env.d.ts` route reference was restored.
+- Original implementation commit: `2ff7d49`.
+- Corrective implementation commit: None; changes are intentionally unstaged and uncommitted.
+- Review decision: Ready for review
+
+### TASK-07 Blocked Workspace Record
+
+- Task ID: TASK-07
+- Objective: Implement deterministic condition evaluation, scenario eligibility, graph analysis, and scheduling without mutation.
+- Initial repository state: Clean `main` at required HEAD `2ff7d49`; `main` tracks `origin/main`; required prior commits exist; no TASK-08 mutation implementation exists.
+- Baseline verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` passed; 11 test files and 278 tests passed. The build-generated `next-env.d.ts` route reference was restored.
+- Authority audit: `SYSTEMS_DESIGN.md` requires political-period, relationship, faction, and regional range eligibility. The accepted TASK-06 `conditionSchema` has no political-period variant. Its numeric variants cover only the closed national/family score, basis-point, and money paths; its generic reference variant has no score field or unit and permits only equality, containment, and existence operators.
+- Blocking effect: A TASK-07 evaluator cannot accept schema-valid political-period conditions or numeric relationship/faction/normalized-region conditions, so the required operator tests and acceptance criteria cannot be implemented against TASK-06 inputs. Adding runtime-only alternate condition shapes would duplicate and redefine the accepted content contract.
+- Required authority decision: The exact strict TASK-06 variants and field allowlists are now implemented locally. Review, accept, and commit the corrective amendment before restarting TASK-07 from a clean tree.
+- Scope confirmation: No TASK-07 runtime source, production content, scheduler, graph traversal, evaluator, mutation behavior, formula, UI, database, Supabase, persistence, authentication, package, lockfile, or later-task implementation was added.
+- Implementation commit: None.
+
 ### TASK-06 Implementation Workspace Record
 
 - Task ID: TASK-06
@@ -66,7 +94,7 @@ The TASK-01 through TASK-04 workspace records below are historical execution evi
 - Tests added: 38 deterministic tests covering metadata/lifecycle, scenarios/beats/choices, conditions, effects, delayed effects, memories, flags, family tokens, canonical entities, manifest rules, duplicates, global collisions, direct references, deterministic lookup, immutability, and precise issue paths.
 - Baseline evidence: `pnpm install --frozen-lockfile`, format, lint, typecheck, 240-test suite, and production build passed before implementation at HEAD `0ba241f`.
 - Final evidence: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, 278 tests across 11 files, production build, and all 7 Playwright projects passed. The build-generated `next-env.d.ts` route-type change was restored and is not part of TASK-06.
-- Implementation commit: None; changes are intentionally unstaged and uncommitted.
+- Implementation commit at that workspace session: None; the original implementation was subsequently reviewed and committed as `2ff7d49`.
 
 ### TASK-05 Implementation Workspace Record
 
@@ -249,6 +277,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-03 | TASK-05 | Final repository verification | Frozen install, format, lint, typecheck, 204-test unit suite, production build, 7-project E2E suite, diff check, changed-path and boundary scans | Local Windows | Passed; no implementation was present to validate | `docs/PROGRESS.md` only | Codex | Repository health is green, but the authority blocker prevents TASK-05 acceptance. No implementation test was added or claimed. |
 | 2026-08-03 | TASK-05 | Specification completion | Added authoritative missing-field, collection, metadata, relationship, and schema-representation decisions; reconciled tracker state without source implementation | Local repository | Ready for documentation review | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Codex | Existing explicit baseline values remain unchanged; TASK-05 returned to `not_started`; verified count remains 4 / 20. |
 | 2026-08-03 | TASK-05 | Initialization implementation and local integration gate | Strict baseline/background/new-game implementation; frozen install, format, lint, typecheck, 240-test suite, production build, 7-project E2E, content-ID/field review, determinism, scope, secret, generated-output, and Git-integrity checks | Local Windows | Ready for review; all required commands passed | `src/domain/initialization/**`, `src/domain/index.ts`, `docs/PROGRESS.md` | Codex | 36 new tests; no persistence, migration, UI, production content, staging, commit, or push. |
+| 2026-08-03 | TASK-06 | Corrective condition-contract amendment | Six strict condition variants, closed entity fields, exact regional basis-point targeting, focused tests, frozen install, format, lint, typecheck, 291-test suite, production build, 7-project E2E, scope, generated-output, and Git-integrity checks | Local Windows | Ready for review; all required commands passed | `src/content/constants.ts`, `src/content/schemas/conditions.ts`, `src/content/condition-contract-amendment.test.ts`, `docs/PROGRESS.md` | Codex | First focused run exposed and corrected an over-bound test fixture; no evaluator, graph, scheduler, runtime, production content, staging, commit, or push. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -258,6 +287,7 @@ An unexecuted command must not be entered as passed evidence.
 |---|---|---|---|---|---|---|---|---|
 | DEC-005 | 2026-08-03 | TASK-05 | Stop before implementation | A complete strict initial save requires values that the user-designated sole authority does not define | Guess zero/empty/50 values; reuse TASK-03 schema fixtures; derive later formulas; expose a partial initializer | `docs/PROGRESS.md` only | Codex | Add authoritative baseline values and supported version literals, then restart TASK-05 from a clean tree |
 | DEC-006 | 2026-08-03 | TASK-05 | Adopt specification-owner initial-state completion decisions | The decisions fill every previously omitted required field without replacing explicit baseline values | Leave blocker open; modify schemas; encode assumptions only in implementation | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Specification owner | Review and commit documentation separately before requesting TASK-05 implementation |
+| DEC-007 | 2026-08-03 | TASK-07 | Stop before runtime implementation | Required eligibility concepts could not be represented by the accepted TASK-06 condition schemas, and a runtime-only alternate contract would violate the instruction not to duplicate or redefine them | Invent runtime-only variants; silently omit required operators; alter the accepted schema without specification review | `docs/PROGRESS.md` only | Codex | Review and commit the implemented TASK-06 correction before TASK-07 restarts |
 
 Use this log for deliberate deviations from the roadmap or authoritative documents.
 
@@ -266,6 +296,7 @@ Use this log for deliberate deviations from the roadmap or authoritative documen
 | Blocker ID | Task | Severity | Description | Evidence | Owner | Required resolution | Status |
 |---|---|---|---|---|---|---|---|
 | BLK-005 | TASK-05 | Blocking | The provisional baseline could not satisfy the strict TASK-03 root/save schemas without inventing multiple required values and collections; starting revision and supported save/schema literals were also unspecified | Prior authority audit against `SYSTEMS_DESIGN.md` section 31 and TASK-03 schemas | Specification owner | Completed in `MVP Initial State Completion Decisions` | Resolved |
+| BLK-007 | TASK-07 | Blocking | Accepted TASK-06 schemas could not encode political-period conditions or numeric relationship, faction, and normalized-region score conditions required by TASK-07 | `src/content/schemas/conditions.ts`; `src/content/constants.ts`; `SYSTEMS_DESIGN.md` sections 26–27 | Specification owner | Technical correction is complete locally; review and commit the TASK-06 amendment before restarting TASK-07 | Technically corrected; open pending review and commit |
 
 A blocker remains in the history even if work moves to another task.
 
@@ -319,10 +350,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-05 verified; TASK-06 ready for review
+- Implementation status: TASK-01 through TASK-05 verified; TASK-06 corrective amendment ready for review; TASK-07 blocked before implementation
 - Current task: TASK-06
 - Foundation baseline commit: `6979c02`
 - Implementation tasks verified: 5 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: TASK-06 ready for review; no release or publication authorized
+- Release decision: TASK-06 correction ready for review; TASK-07 remains blocked and no release or publication is authorized

@@ -166,7 +166,42 @@ export const BASIS_POINT_STATE_FIELDS = [
   "economy.inflationBps",
   "economy.unemploymentBps",
   "economy.annualGrowthBps",
-  "regions.unemploymentBps",
+] as const;
+
+export const RELATIONSHIP_SCORE_FIELDS = [
+  "trust",
+  "respect",
+  "fear",
+  "affection",
+  "ideologicalAlignment",
+  "personalLeverage",
+  "publicRelationship",
+  "privateRelationship",
+] as const;
+
+export const FACTION_SCORE_FIELDS = [
+  "support",
+  "trust",
+  "fear",
+  "organization",
+  "mobilization",
+  "radicalization",
+  "unity",
+  "governmentAccess",
+  "unmetDemandSeverity",
+  "repressionMemory",
+] as const;
+
+export const REGION_SCORE_FIELDS = [
+  "approval",
+  "localEconomy",
+  "foodSupply",
+  "fuelSupply",
+  "infrastructure",
+  "securityTension",
+  "protestIntensity",
+  "militaryPresence",
+  "governorTrust",
 ] as const;
 
 export const MONEY_STATE_FIELDS = [

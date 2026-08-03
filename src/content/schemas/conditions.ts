@@ -2,15 +2,23 @@ import { z } from "zod";
 
 import {
   basisPointsSchema,
+  canonicalCharacterIdSchema,
+  canonicalFactionIdSchema,
+  canonicalRegionIdSchema,
   normalizedScoreSchema,
   politicalBackgroundIdSchema,
+  politicalPeriodSchema,
   saveVersionSchema,
   stateVisibilitySchema,
+  unemploymentBasisPointsSchema,
 } from "../../domain";
 import {
   BASIS_POINT_STATE_FIELDS,
+  FACTION_SCORE_FIELDS,
   MONEY_STATE_FIELDS,
   NORMALIZED_STATE_FIELDS,
+  REGION_SCORE_FIELDS,
+  RELATIONSHIP_SCORE_FIELDS,
 } from "../constants";
 import { conditionContentIdSchema, contentObjectIdSchema } from "../ids";
 import {
@@ -152,6 +160,124 @@ export const moneyConditionSchema = z
     validateNumericExpectation(converted, context);
   });
 
+export const politicalPeriodConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("political_period"),
+    operator: numericOperators,
+    unit: z.literal("political_period"),
+    expectedValue: politicalPeriodSchema.optional(),
+    range: z
+      .object({
+        minimum: politicalPeriodSchema,
+        maximum: politicalPeriodSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
+export const relationshipScoreConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("relationship_score"),
+    characterId: canonicalCharacterIdSchema,
+    field: z.enum(RELATIONSHIP_SCORE_FIELDS),
+    operator: numericOperators,
+    unit: z.literal("normalized_score"),
+    expectedValue: normalizedScoreSchema.optional(),
+    range: z
+      .object({
+        minimum: normalizedScoreSchema,
+        maximum: normalizedScoreSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
+export const factionScoreConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("faction_score"),
+    factionId: canonicalFactionIdSchema,
+    field: z.enum(FACTION_SCORE_FIELDS),
+    operator: numericOperators,
+    unit: z.literal("normalized_score"),
+    expectedValue: normalizedScoreSchema.optional(),
+    range: z
+      .object({
+        minimum: normalizedScoreSchema,
+        maximum: normalizedScoreSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
+export const factionRegionalInfluenceConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("faction_regional_influence"),
+    factionId: canonicalFactionIdSchema,
+    regionId: canonicalRegionIdSchema,
+    operator: numericOperators,
+    unit: z.literal("normalized_score"),
+    expectedValue: normalizedScoreSchema.optional(),
+    range: z
+      .object({
+        minimum: normalizedScoreSchema,
+        maximum: normalizedScoreSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
+export const regionScoreConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("region_score"),
+    regionId: canonicalRegionIdSchema,
+    field: z.enum(REGION_SCORE_FIELDS),
+    operator: numericOperators,
+    unit: z.literal("normalized_score"),
+    expectedValue: normalizedScoreSchema.optional(),
+    range: z
+      .object({
+        minimum: normalizedScoreSchema,
+        maximum: normalizedScoreSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
+export const regionBasisPointsConditionSchema = z
+  .object({
+    ...conditionBase,
+    type: z.literal("region_basis_points"),
+    regionId: canonicalRegionIdSchema,
+    field: z.literal("unemploymentBps"),
+    operator: numericOperators,
+    unit: z.literal("basis_points"),
+    expectedValue: unemploymentBasisPointsSchema.optional(),
+    range: z
+      .object({
+        minimum: unemploymentBasisPointsSchema,
+        maximum: unemploymentBasisPointsSchema,
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+  .superRefine(validateNumericExpectation);
+
 export const backgroundConditionSchema = z
   .object({
     ...conditionBase,
@@ -246,6 +372,12 @@ export const conditionSchema = z.discriminatedUnion("type", [
   normalizedScoreConditionSchema,
   basisPointConditionSchema,
   moneyConditionSchema,
+  politicalPeriodConditionSchema,
+  relationshipScoreConditionSchema,
+  factionScoreConditionSchema,
+  factionRegionalInfluenceConditionSchema,
+  regionScoreConditionSchema,
+  regionBasisPointsConditionSchema,
   backgroundConditionSchema,
   chapterConditionSchema,
   versionConditionSchema,
