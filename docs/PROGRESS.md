@@ -3,8 +3,8 @@
 ## 1. Current Status
 
 - Project phase: Domain foundation implementation
-- Current task: TASK-05
-- Current task title: Initial State and Political Backgrounds
+- Current task: TASK-06
+- Current task title: Content Schemas, Registries, and Manifest
 - Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
@@ -12,10 +12,10 @@
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: TASK-05 initialization implementation and full local verification completed; ready for review
-- Implementation tasks verified: 4 / 20
+- Last progress update: TASK-05 verified at `0ba241f`; TASK-06 content contracts, registries, manifest, token validation, and reference validation are ready for review
+- Implementation tasks verified: 5 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is ready for review from the reviewed specification baseline `5669f68`; no preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`; TASK-06 is ready for review with no implementation commit, and no preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -25,8 +25,8 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-02 | Design Tokens and Application Shell | A | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Visual-reference revision complete; format, lint, typecheck, 9 unit/component tests, production build, Storybook build, and 7 production-mode E2E viewport projects passed; all required screenshots inspected | None |
 | TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
-| TASK-05 | Initial State and Political Backgrounds | B | `ready_for_review` | TASK-04 | None | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed | None |
-| TASK-06 | Content Schemas, Registries, and Manifest | B | `not_started` | TASK-03 | None | None | None |
+| TASK-05 | Initial State and Political Backgrounds | B | `verified` | TASK-04 | `0ba241f` | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed; implementation reviewed and accepted | None |
+| TASK-06 | Content Schemas, Registries, and Manifest | B | `ready_for_review` | TASK-03 | None | Strict content contracts and immutable registry implemented; frozen install, format, lint, typecheck, 278-test suite, production build, and 7-project E2E regression passed | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `not_started` | TASK-05, TASK-06 | None | None | None |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `not_started` | TASK-05, TASK-07 | None | None | None |
 | TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `not_started` | TASK-04, TASK-05 | None | None | None |
@@ -47,6 +47,26 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-06 Implementation Workspace Record
+
+- Task ID: TASK-06
+- Objective: Implement strict authored-content schemas, typed immutable registries, direct cross-reference validation, family-token validation, and a versioned content manifest without runtime content execution.
+- Scope confirmed: Yes; limited to `src/content` and this tracker. No production content, eligibility evaluator, scheduler, graph traversal, mutation engine, delayed-effect executor, formulas, UI, Supabase, database, persistence, authentication, environment, package, lockfile, or TASK-07 implementation was added.
+- Files added: `src/content/constants.ts`, `src/content/ids.ts`, `src/content/index.ts`, `src/content/registry.ts`, `src/content/tokens.ts`, seven focused schema modules under `src/content/schemas`, and `src/content/content-contracts.test.ts`.
+- Architecture: Pure TypeScript and Zod with strict common metadata; scenario, beat, choice, condition, effect, conditional-effect, delayed-effect, memory, flag, entity, manifest, and token contracts; intentional public exports; no process-global mutable registry or I/O dependency.
+- Lifecycle: Exact `draft`, `review`, `approved`, `published`, `deprecated`, and `withdrawn` values are reused. Published metadata requires reviewed originality and change notes; published manifests require a timestamp and release notes and reject active draft, review, approved, or withdrawn metadata objects.
+- Identifiers: TASK-03 authored-ID brands are reused; bounded stable IDs were added only for beats, institutions, intelligence assertions, epilogues, outlets, and tokens. Canonical characters, factions, regions, outcomes, institutions, and outlets use closed authoritative IDs.
+- Registry design: `buildContentRegistry(unknown)` strictly validates every grouped object, returns a discriminated success/failure result, sorts stable IDs for deterministic lookup, recursively freezes returned objects and maps, and never silently drops or overwrites invalid input.
+- Uniqueness and references: Duplicate IDs fail locally and across registries. Direct scenario, choice, condition, effect, delayed-effect, memory, flag, media, outcome, epilogue, policy, common-related-content, and manifest references produce structured blocking issues with object ID, code, path, and message.
+- Manifest: Supports `mvp-0.1.0` and `schema-1.0.0`, canonical save-version ranges, lifecycle-aware publication timestamps and notes, unique disjoint included/withdrawn IDs, externally supplied integrity metadata, object existence, lifecycle compatibility, and content-version compatibility. No checksum is calculated and nothing is published.
+- Family tokens: All 12 approved tokens have immutable metadata. Extraction validates exact double-brace tokens, rejects unknown or malformed required syntax, treats single braces and markup-like text as inert strings, and performs no substitution or rendering.
+- Narrow decisions: Authored effect magnitude is structurally classified as `unclassified` because no authoritative per-effect magnitude budget exists. Direct self-references and in-scenario beat references are checked; graph cycles, reachability, contradiction solving, scheduling, evaluation, and execution remain TASK-07 or later work.
+- Production-content confirmation: Test prose and records are neutral, explicitly test-only fixtures kept in a test module and are not exported. No Prologue, Chapter 1, decision, dialogue, article, law, intelligence report, outcome prose, epilogue prose, or production manifest was authored.
+- Tests added: 38 deterministic tests covering metadata/lifecycle, scenarios/beats/choices, conditions, effects, delayed effects, memories, flags, family tokens, canonical entities, manifest rules, duplicates, global collisions, direct references, deterministic lookup, immutability, and precise issue paths.
+- Baseline evidence: `pnpm install --frozen-lockfile`, format, lint, typecheck, 240-test suite, and production build passed before implementation at HEAD `0ba241f`.
+- Final evidence: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, 278 tests across 11 files, production build, and all 7 Playwright projects passed. The build-generated `next-env.d.ts` route-type change was restored and is not part of TASK-06.
+- Implementation commit: None; changes are intentionally unstaged and uncommitted.
 
 ### TASK-05 Implementation Workspace Record
 
@@ -299,10 +319,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-04 verified; TASK-05 ready for review
-- Current task: TASK-05
+- Implementation status: TASK-01 through TASK-05 verified; TASK-06 ready for review
+- Current task: TASK-06
 - Foundation baseline commit: `6979c02`
-- Implementation tasks verified: 4 / 20
+- Implementation tasks verified: 5 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: Incomplete evaluation
+- Release decision: TASK-06 ready for review; no release or publication authorized
