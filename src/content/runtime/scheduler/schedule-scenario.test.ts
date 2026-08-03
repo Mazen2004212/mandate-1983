@@ -238,10 +238,20 @@ describe("deterministic scenario scheduler", () => {
     const available = runtimeScenario("scenario_scheduler_available");
     const history = [
       resolvedChoiceHistoryEntrySchema.parse({
+        type: "choice_resolution",
+        idempotencyKey: "scheduler_completed_resolution",
         scenarioId: completed.id,
         choiceId: "choice_scheduler_completed",
+        expectedRevision: 0,
+        resultingRevision: 1,
         politicalPeriod: 0,
         resolvedAt: "1983-01-01T00:00:00.000Z",
+        appliedEffectIds: [],
+        createdMemoryIds: [],
+        addedFlagIds: [],
+        removedFlagIds: [],
+        scheduledDelayedEffectIds: [],
+        scheduledMediaIds: [],
       }),
     ];
     const save = runtimeSave(1);

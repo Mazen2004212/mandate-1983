@@ -78,6 +78,47 @@ export const rootGameStateSchema = z
     outcomeState: outcomeStateSchema,
     debugMetadata: debugMetadataStateSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((state, context) => {
+    const choiceHistoryByIdempotencyKey = new Map(
+      state.eventHistory
+        .filter((entry) => entry.type === "choice_resolution")
+        .map((entry) => [String(entry.idempotencyKey), entry] as const),
+    );
+
+    state.delayedEffects.forEach((effect, index) => {
+      const source = choiceHistoryByIdempotencyKey.get(
+        String(effect.sourceMutationIdempotencyKey),
+      );
+      if (source === undefined) {
+        context.addIssue({
+          code: "custom",
+          path: ["delayedEffects", index, "sourceMutationIdempotencyKey"],
+          message:
+            "Delayed-effect runtime state must reference an accepted choice-resolution history entry.",
+        });
+        return;
+      }
+      if (
+        source.scenarioId !== effect.sourceScenarioId ||
+        source.choiceId !== effect.sourceChoiceId
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["delayedEffects", index, "sourceScenarioId"],
+          message:
+            "Delayed-effect source scenario and choice must match its originating choice-resolution receipt.",
+        });
+      }
+      if (!source.scheduledDelayedEffectIds.includes(effect.id)) {
+        context.addIssue({
+          code: "custom",
+          path: ["delayedEffects", index, "id"],
+          message:
+            "Delayed-effect runtime state must be listed by its originating choice-resolution receipt.",
+        });
+      }
+    });
+  });
 
 export type RootGameState = z.infer<typeof rootGameStateSchema>;

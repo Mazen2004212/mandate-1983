@@ -32,6 +32,18 @@ export const DELAYED_EFFECT_STATUSES = [
   "failed",
 ] as const;
 
+export const DELAYED_EFFECT_IDEMPOTENCY_SCOPES = [
+  "save",
+  "scenario",
+  "choice",
+] as const;
+
+export const DELAYED_EFFECT_FAILURE_BEHAVIORS = [
+  "block_advancement",
+  "mark_failed",
+  "cancel",
+] as const;
+
 export const CHARACTER_AVAILABILITIES = [
   "active",
   "resigned",

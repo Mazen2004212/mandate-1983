@@ -257,6 +257,26 @@ For normal choice resolution:
 
 A pre-commit failure applies nothing. A retry with the same valid idempotency key returns the established result without applying effects again.
 
+### Mutation Persistence Completion Decisions
+
+For the pre-publication MVP contract, `eventHistory` is the persisted accepted-mutation and idempotency ledger. It is a strict discriminated union of `choice_resolution` and `period_advance` receipts. Idempotency keys are globally unique across both receipt types within one save. This completes the existing `schema-1.0.0` contract; no published save or migration contract currently exists, and no additional root-state domain is introduced.
+
+A choice-resolution receipt persists `type`, `idempotencyKey`, `scenarioId`, `choiceId`, `expectedRevision`, `resultingRevision`, `politicalPeriod`, `resolvedAt`, `appliedEffectIds`, `createdMemoryIds`, `addedFlagIds`, `removedFlagIds`, `scheduledDelayedEffectIds`, and `scheduledMediaIds`. Its request identity is `type`, `idempotencyKey`, `scenarioId`, `choiceId`, `expectedRevision`, and `resolvedAt`. `resultingRevision` is exactly `expectedRevision + 1`.
+
+A period-advance receipt persists `type`, `idempotencyKey`, `expectedRevision`, `resultingRevision`, `fromPeriod`, `toPeriod`, `advancedAt`, `appliedEffectIds`, `executedDelayedEffectIds`, `cancelledDelayedEffectIds`, `expiredDelayedEffectIds`, `failedDelayedEffectIds`, and `scheduledMediaIds`. Its request identity is `type`, `idempotencyKey`, `expectedRevision`, `toPeriod`, and `advancedAt`. `resultingRevision` is exactly `expectedRevision + 1`, and the MVP requires `toPeriod` to equal `fromPeriod + 1`.
+
+Mutation retries use this authoritative order:
+
+1. Parse and structurally validate the request and current save.
+2. Search accepted event history for the idempotency key before ordinary stale-revision rejection.
+3. If the key exists and the persisted request identity exactly matches, return an `already_applied` mutation receipt without changing state, revision, or history.
+4. If the key exists but any request-identity field differs, return `idempotency_conflict`.
+5. If the key does not exist, require `expectedRevision` to equal the current revision before mutation.
+6. An idempotent retry returns the persisted mutation receipt, not a historical full-save snapshot.
+7. The current authoritative save remains unchanged during the retry response.
+
+Receipt arrays reject duplicate authored IDs. Period-advance terminal delayed-effect groups are mutually exclusive within a receipt. Receipts contain no player-facing prose, generated IDs, request digests, or new hashes. Complete retained history is not assumed, so revision transitions are validated per receipt without requiring the retained entries to form a contiguous sequence from zero.
+
 ## 12. MVP Economic State
 
 Authoritative exact-money fields are `treasuryMinor`, `monthlyRevenueMinor`, `monthlyExpenditureMinor`, `monthlyDebtServiceMinor`, `arrearsMinor`, `plannedArrearsPaymentMinor`, `periodFinancingInflowsMinor`, and `periodProjectOutflowsMinor`.
@@ -877,6 +897,10 @@ Every delayed effect defines a unique effect ID, source scenario, source choice,
 Statuses are Pending, Executed, Cancelled, Expired, and Failed. Resolve by earliest trigger period, then highest priority, then stable effect ID.
 
 An executed effect cannot execute again; a cancelled effect cannot execute. Failed effects block period advancement until recovered or deliberately resolved. Cancellation is recorded rather than silently deleted. A triggered effect may create narrative eligibility but may not invent undefined content.
+
+The persisted runtime snapshot contains the delayed-effect definition ID, definition content version, source scenario and choice, source mutation idempotency key, creation and trigger periods, priority, effect IDs, prerequisite, cancellation, and expiry condition IDs, idempotency scope, failure behavior, follow-up content IDs, and status. Future execution uses this accepted snapshot. Registry validation may verify consistency but must not silently replace it from a newer definition.
+
+Delayed-effect instance identity follows the persisted scope. Under `save`, the definition ID is unique across the save. Under `scenario`, the definition ID plus source scenario is unique. Under `choice`, the definition ID plus source scenario plus source choice is unique. Every persisted delayed effect must reference the originating accepted choice-resolution receipt by idempotency key, scenario ID, and choice ID.
 
 ## 29. Media Reaction Model
 

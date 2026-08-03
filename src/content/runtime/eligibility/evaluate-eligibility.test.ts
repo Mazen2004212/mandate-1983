@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   contentVersionSchema,
+  periodAdvanceHistoryEntrySchema,
   resolvedChoiceHistoryEntrySchema,
 } from "../../../domain";
 import type { ConditionDefinition } from "../../schemas/conditions";
@@ -143,12 +144,45 @@ describe("scenario eligibility", () => {
     });
     const base = context([first, second]);
     expect(evaluateScenarioEligibility(second, base).eligible).toBe(false);
+    const periodHistory = [
+      periodAdvanceHistoryEntrySchema.parse({
+        type: "period_advance",
+        idempotencyKey: "eligibility_period_advance",
+        expectedRevision: 0,
+        resultingRevision: 1,
+        fromPeriod: 0,
+        toPeriod: 1,
+        advancedAt: "1983-02-01T00:00:00.000Z",
+        appliedEffectIds: [],
+        executedDelayedEffectIds: [],
+        cancelledDelayedEffectIds: [],
+        expiredDelayedEffectIds: [],
+        failedDelayedEffectIds: [],
+        scheduledMediaIds: [],
+      }),
+    ];
+    expect(
+      evaluateScenarioEligibility(second, {
+        ...base,
+        history: periodHistory,
+      }).eligible,
+    ).toBe(false);
     const history = [
       resolvedChoiceHistoryEntrySchema.parse({
+        type: "choice_resolution",
+        idempotencyKey: "eligibility_predecessor_resolution",
         scenarioId: first.id,
         choiceId: "choice_runtime_resolution",
+        expectedRevision: 0,
+        resultingRevision: 1,
         politicalPeriod: 0,
         resolvedAt: "1983-01-01T00:00:00.000Z",
+        appliedEffectIds: [],
+        createdMemoryIds: [],
+        addedFlagIds: [],
+        removedFlagIds: [],
+        scheduledDelayedEffectIds: [],
+        scheduledMediaIds: [],
       }),
     ];
     expect(
@@ -163,10 +197,20 @@ describe("scenario eligibility", () => {
     });
     const entry = (scenarioId: string, choiceId: string) =>
       resolvedChoiceHistoryEntrySchema.parse({
+        type: "choice_resolution",
+        idempotencyKey: `${scenarioId}_${choiceId}`,
         scenarioId,
         choiceId,
+        expectedRevision: 0,
+        resultingRevision: 1,
         politicalPeriod: 0,
         resolvedAt: "1983-01-01T00:00:00.000Z",
+        appliedEffectIds: [],
+        createdMemoryIds: [],
+        addedFlagIds: [],
+        removedFlagIds: [],
+        scheduledDelayedEffectIds: [],
+        scheduledMediaIds: [],
       });
     expect(
       evaluateScenarioEligibility(once, {

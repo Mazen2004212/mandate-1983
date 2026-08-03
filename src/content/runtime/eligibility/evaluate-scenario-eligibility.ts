@@ -35,7 +35,10 @@ function occurrenceCount(
   scenarioId: string,
   history: ScenarioEligibilityContext["history"],
 ): number {
-  return history.filter((entry) => entry.scenarioId === scenarioId).length;
+  return history.filter(
+    (entry) =>
+      entry.type === "choice_resolution" && entry.scenarioId === scenarioId,
+  ).length;
 }
 
 function activeManifestCheck(
@@ -183,7 +186,9 @@ export function evaluateScenarioEligibility(
   }
 
   const completedIds = new Set(
-    context.history.map((entry) => entry.scenarioId),
+    context.history
+      .filter((entry) => entry.type === "choice_resolution")
+      .map((entry) => entry.scenarioId),
   );
   scenario.predecessors.forEach((predecessorId, index) => {
     if (context.registry.scenarios[predecessorId] === undefined) {

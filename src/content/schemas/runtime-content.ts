@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import {
+  delayedEffectFailureBehaviorSchema,
+  delayedEffectIdempotencyScopeSchema,
   delayedEffectStatusSchema,
   memoryActorIdSchema,
   politicalPeriodSchema,
@@ -32,9 +34,9 @@ export const delayedEffectDefinitionSchema = z
     prerequisites: z.array(conditionContentIdSchema),
     cancellationConditions: z.array(conditionContentIdSchema),
     expiryConditions: z.array(conditionContentIdSchema),
-    idempotencyScope: z.enum(["save", "scenario", "choice"]),
+    idempotencyScope: delayedEffectIdempotencyScopeSchema,
     status: delayedEffectStatusSchema,
-    failureBehavior: z.enum(["block_advancement", "mark_failed", "cancel"]),
+    failureBehavior: delayedEffectFailureBehaviorSchema,
     followUpContentIds: z.array(contentObjectIdSchema),
     developerExplanation: boundedText(1, 600),
   })

@@ -1,7 +1,4 @@
-import type {
-  AuthoritativeSave,
-  ResolvedChoiceHistoryEntry,
-} from "../../../domain";
+import type { AuthoritativeSave, MutationHistoryEntry } from "../../../domain";
 import type { ContentRegistryBundle } from "../../registry";
 import type { ChapterId } from "../../schemas/common";
 import type { ScenarioDefinition } from "../../schemas/scenario";
@@ -39,7 +36,7 @@ export interface ScenarioEligibilityContext {
   readonly registry: ContentRegistryBundle;
   readonly save: AuthoritativeSave;
   readonly chapter: ChapterId;
-  readonly history: readonly ResolvedChoiceHistoryEntry[];
+  readonly history: readonly MutationHistoryEntry[];
 }
 
 export interface ScenarioEligibilityResult {

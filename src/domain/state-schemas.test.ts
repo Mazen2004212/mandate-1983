@@ -217,15 +217,20 @@ describe("memory and delayed-effect state", () => {
   it("enforces delayed-effect runtime chronology and exact fields", () => {
     const effect = {
       id: "delay_supply_relief",
+      definitionContentVersion: "mvp-0.1.0",
       sourceScenarioId: "scenario_supply_01",
       sourceChoiceId: "choice_imports",
+      sourceMutationIdempotencyKey: "choice_supply_relief_1",
       creationPeriod: 1,
       triggerPeriod: 2,
       priority: 10,
       effectIds: ["effect_supply_relief"],
       prerequisiteConditionIds: [],
       cancellationConditionIds: [],
-      idempotencyKey: "delay_supply_relief_1",
+      expiryConditionIds: [],
+      idempotencyScope: "choice",
+      failureBehavior: "block_advancement",
+      followUpContentIds: [],
       status: "pending",
     };
     expect(delayedEffectRuntimeStateSchema.safeParse(effect).success).toBe(
