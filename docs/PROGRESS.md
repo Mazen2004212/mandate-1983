@@ -3,19 +3,19 @@
 ## 1. Current Status
 
 - Project phase: Domain foundation implementation
-- Current task: TASK-06
-- Current task title: Content Schemas, Registries, and Manifest
+- Current task: TASK-07
+- Current task title: Eligibility, Content Graphs, and Scenario Scheduler
 - Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
-- Latest verified baseline commit: `0ba241f`
+- Latest verified baseline commit: `c664ad4`
 - Preview URL: None
 - Production URL: None
-- Active blocker: BLK-007 — technically corrected in the unstaged TASK-06 amendment; remains open pending review and commit
-- Last progress update: TASK-06 corrective condition-contract amendment completed locally and returned to review; TASK-07 remains blocked pending acceptance
-- Implementation tasks verified: 5 / 20
+- Active blocker: None
+- Last progress update: TASK-07 deterministic eligibility, graph analysis, and scheduling implementation completed locally with all required checks passing
+- Implementation tasks verified: 6 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. The original TASK-06 implementation exists at `2ff7d49`; its corrective condition-contract amendment is unstaged, uncommitted, and `ready_for_review`. TASK-07 remains blocked before implementation until that correction is reviewed and committed. No preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is ready for review as an unstaged, uncommitted local implementation from the clean canonical `c664ad4` baseline. No preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -26,8 +26,8 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-03 | Domain Types and Runtime State Schemas | B | `verified` | TASK-01 | `6979c02` (consolidated baseline) | Strict domain schemas and 98 new tests passed; frozen install, format, lint, typecheck, 107-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-04 | Deterministic Arithmetic and Seed Primitives | B | `verified` | TASK-03 | `6979c02` (consolidated baseline) | Exact arithmetic and deterministic seed primitives implemented; frozen install, format, lint, typecheck, 204-test full suite, production build, and 7-project E2E regression passed; implementation reviewed, accepted, and consolidated | None |
 | TASK-05 | Initial State and Political Backgrounds | B | `verified` | TASK-04 | `0ba241f` | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed; implementation reviewed and accepted | None |
-| TASK-06 | Content Schemas, Registries, and Manifest | B | `ready_for_review` | TASK-03 | `2ff7d49` (original implementation) | Corrective strict condition variants added locally; frozen install, format, lint, typecheck, 291-test suite, production build, and 7-project E2E regression passed | None |
-| TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `blocked` | TASK-05, TASK-06 | None | Clean preflight and 278-test regression baseline passed at `2ff7d49`; contract gap is technically corrected locally but awaits TASK-06 review and commit | BLK-007 |
+| TASK-06 | Content Schemas, Registries, and Manifest | B | `verified` | TASK-03 | `2ff7d49` (original); `c664ad4` (corrective contract) | Original implementation and numeric condition-contract correction reviewed, committed, and pushed; final corrective gate passed 291 tests and 7 E2E projects | None |
+| TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `ready_for_review` | TASK-05, TASK-06 | None | 58 focused runtime tests; format, lint, typecheck, 349-test full suite, production build, 7-project E2E, deterministic/boundary scans, and zero-mutation checks passed | None |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `not_started` | TASK-05, TASK-07 | None | None | None |
 | TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `not_started` | TASK-04, TASK-05 | None | None | None |
 | TASK-10 | Supabase Foundation, Authentication, and RLS | C | `not_started` | TASK-03 | None | None | None |
@@ -61,8 +61,8 @@ The TASK-01 through TASK-04 workspace records below are historical execution evi
 - Failure history: The first focused run had 50 passes and one failed fixture because its regional unemployment range used 10,000 basis points. The fixture was corrected to the authoritative 4,000 maximum; production validation was not widened or weakened.
 - Final verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e` passed. The full unit result was 12 files and 291 tests; all 7 existing production-mode Chromium viewport projects passed. The build-generated `next-env.d.ts` route reference was restored.
 - Original implementation commit: `2ff7d49`.
-- Corrective implementation commit: None; changes are intentionally unstaged and uncommitted.
-- Review decision: Ready for review
+- Corrective implementation commit: `c664ad4`.
+- Review decision: Verified
 
 ### TASK-07 Blocked Workspace Record
 
@@ -75,6 +75,28 @@ The TASK-01 through TASK-04 workspace records below are historical execution evi
 - Required authority decision: The exact strict TASK-06 variants and field allowlists are now implemented locally. Review, accept, and commit the corrective amendment before restarting TASK-07 from a clean tree.
 - Scope confirmation: No TASK-07 runtime source, production content, scheduler, graph traversal, evaluator, mutation behavior, formula, UI, database, Supabase, persistence, authentication, package, lockfile, or later-task implementation was added.
 - Implementation commit: None.
+
+### TASK-07 Implementation Workspace Record
+
+- Task ID: TASK-07
+- Objective: Implement pure, deterministic, explainable condition evaluation, scenario eligibility, character availability, content-graph analysis, and scenario scheduling without state mutation.
+- Initial repository state: Clean `main` at required HEAD `c664ad4`, tracking `origin/main`; `.git` present; TASK-05 and corrected TASK-06 dependencies verified; BLK-007 resolved; no TASK-08 source present.
+- Baseline verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` passed before source editing; 12 test files and 291 tests passed. The build-generated `next-env.d.ts` route reference was restored.
+- Files changed: Added pure runtime modules and focused tests under `src/content/runtime` for conditions, eligibility, graph analysis, and scheduling; added the intentional runtime export from `src/content/index.ts`; updated the obsolete TASK-06 no-evaluator regression assertion; updated this tracker. No other file category changed.
+- Condition semantics: Every accepted TASK-06 condition type and operator is evaluated through closed typed accessors or canonical entity lookups. Normalized scores, basis points, political periods, and relationship/faction/region fields remain integer-valued; `MoneyMinor` is parsed and compared as exact `bigint`; compound `all`, `any`, and `none` recurse deterministically and fail closed for missing or cyclic references.
+- Explanation safety: Readonly developer results include targets, expected/actual values, failure codes, children, and authored failure context. Player projection omits hidden, report-dependent, developer-only, and administrative results; qualitative visibility omits exact values; hidden compound children remain absent. Scheduler player projection omits scenario IDs, seeds, jitter, hashes, and developer detail.
+- Character availability: Canonical participants default to the only currently authored rule, `active`; every unavailable state is handled; absent canonical state fails safely. Stable family roles resolve through validated family identity without treating names as IDs. The lower-level availability check accepts explicit permitted states, but scenario content currently authors no such override, so eligibility does not invent one.
+- Scenario eligibility: Accumulates all lifecycle, manifest inclusion/withdrawal, content/save compatibility, political-period, predecessor, repeatability/maximum-occurrence, participant, required-condition, and exclusion blockers. It reports not-yet-available/current/expired state and preserves both developer and safe player explanations without mutating the scenario, registry, history, save, or authoritative state.
+- Graph design: Deterministic ASCII-ordered analysis builds predecessor/follow-up edges, entry/terminal/reachable sets, missing/self-reference and contradiction findings, manifest exclusions, conditional-reachability notices, and strongly connected components. Mandatory/direct-follow-up cycles and unreachable mandatory nodes are blocking; repeatable optional/ambient cycles are informational; other cycles are warnings.
+- Scheduler comparison order: Eligible candidates first; then category tier `direct_follow_up`, `mandatory`, `major`, `optional`, `ambient_media`, `outcome`; then descending `basePriority * 100 + urgency * 10 + min(periodsWaiting, 9) + jitter`; then ascending ASCII authored scenario ID. Direct follow-ups require an explicit due ID. `outcome` is placed last because the authoritative scheduling list omits it and no broader behavior was invented.
+- Seed and retry behavior: Jitter uses namespace `scenario_scheduler_jitter`, range 0â€“9, and the existing TASK-04 seed context of game seed, namespace, scenario ID, political period, explicit attempt index, and content version. Identical complete input cannot reroll; period, game seed, and explicit attempt index separate streams. No clock, request order, registry order, process state, locale collation, or direct randomness participates.
+- Narrow decisions: Repeatability honors `repeatable` and `maximumOccurrences` only because no cooldown field exists. Graph reachability is structural; runtime conditions are marked indeterminate rather than solved statically. The scheduler requires explicit waiting and due-follow-up inputs and does not calculate or persist either.
+- Tests added: 58 focused runtime tests cover all required operator and domain families, exact money, references, nested compounds, explanation visibility, lifecycle/manifest/version checks, all character availability states, predecessor/repeatability/expiration behavior, simultaneous blockers, graph failures/cycles/reachability/order, scheduler tiers/formula/waiting/jitter/ties/stream separation/no-candidate behavior, and zero input mutation. The existing 13-test corrective contract suite now asserts the TASK-07 evaluator export exists.
+- Verification history: The first repository-wide run passed format, lint, and typecheck but reported 335/336 tests because the accepted TASK-06 regression still asserted that no evaluator export existed. That obsolete phase-boundary assertion was updated without weakening schema validation. Final `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e` all passed: 16 files and 349 tests, successful static production build, and all 7 existing Chromium viewport projects. The build-generated `next-env.d.ts` change was restored.
+- Boundary and integrity review: Targeted scans found no `Math.random`, current-time reads, `eval`, `Function` constructor, React, Next.js, browser API, Supabase/database import, suppression, broad `any`, unsafe cast, secret, UI, package/lockfile, SQL/migration, environment, authentication, persistence, production content, TASK-08 mutation, TASK-09 formula, generated tracked artifact, staged change, or nested `.git` addition. `git diff --check` passed.
+- Known limitations: This is an in-memory pure runtime foundation. It does not resolve choices, apply effects, change revisions, advance periods, persist scheduler decisions, execute delays, calculate systems, publish content, access a database, or render UI. Structural graph analysis does not prove condition satisfiability.
+- Implementation commit: None; changes are unstaged and uncommitted as required.
+- Review decision: Ready for review
 
 ### TASK-06 Implementation Workspace Record
 
@@ -278,6 +300,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-03 | TASK-05 | Specification completion | Added authoritative missing-field, collection, metadata, relationship, and schema-representation decisions; reconciled tracker state without source implementation | Local repository | Ready for documentation review | `docs/SYSTEMS_DESIGN.md`, `docs/PROGRESS.md` | Codex | Existing explicit baseline values remain unchanged; TASK-05 returned to `not_started`; verified count remains 4 / 20. |
 | 2026-08-03 | TASK-05 | Initialization implementation and local integration gate | Strict baseline/background/new-game implementation; frozen install, format, lint, typecheck, 240-test suite, production build, 7-project E2E, content-ID/field review, determinism, scope, secret, generated-output, and Git-integrity checks | Local Windows | Ready for review; all required commands passed | `src/domain/initialization/**`, `src/domain/index.ts`, `docs/PROGRESS.md` | Codex | 36 new tests; no persistence, migration, UI, production content, staging, commit, or push. |
 | 2026-08-03 | TASK-06 | Corrective condition-contract amendment | Six strict condition variants, closed entity fields, exact regional basis-point targeting, focused tests, frozen install, format, lint, typecheck, 291-test suite, production build, 7-project E2E, scope, generated-output, and Git-integrity checks | Local Windows | Ready for review; all required commands passed | `src/content/constants.ts`, `src/content/schemas/conditions.ts`, `src/content/condition-contract-amendment.test.ts`, `docs/PROGRESS.md` | Codex | First focused run exposed and corrected an over-bound test fixture; no evaluator, graph, scheduler, runtime, production content, staging, commit, or push. |
+| 2026-08-03 | TASK-07 | Deterministic eligibility, graph, and scheduler implementation | Frozen install; format; lint; typecheck; 349-test suite; production build; 7-project E2E; fixed-seed, explanation-safety, graph-order, zero-mutation, scope, generated-output, and Git-integrity checks | Local Windows | Ready for review; all final required commands passed | `src/content/runtime/**`, `src/content/index.ts`, `src/content/condition-contract-amendment.test.ts`, `docs/PROGRESS.md` | Codex | First full test run found one obsolete TASK-06 no-evaluator assertion (335/336); corrected for the new task boundary, then all 349 passed. No staging, commit, push, production content, UI, persistence, formula, or TASK-08 work. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -296,7 +319,7 @@ Use this log for deliberate deviations from the roadmap or authoritative documen
 | Blocker ID | Task | Severity | Description | Evidence | Owner | Required resolution | Status |
 |---|---|---|---|---|---|---|---|
 | BLK-005 | TASK-05 | Blocking | The provisional baseline could not satisfy the strict TASK-03 root/save schemas without inventing multiple required values and collections; starting revision and supported save/schema literals were also unspecified | Prior authority audit against `SYSTEMS_DESIGN.md` section 31 and TASK-03 schemas | Specification owner | Completed in `MVP Initial State Completion Decisions` | Resolved |
-| BLK-007 | TASK-07 | Blocking | Accepted TASK-06 schemas could not encode political-period conditions or numeric relationship, faction, and normalized-region score conditions required by TASK-07 | `src/content/schemas/conditions.ts`; `src/content/constants.ts`; `SYSTEMS_DESIGN.md` sections 26–27 | Specification owner | Technical correction is complete locally; review and commit the TASK-06 amendment before restarting TASK-07 | Technically corrected; open pending review and commit |
+| BLK-007 | TASK-07 | Blocking | Accepted TASK-06 schemas could not encode political-period conditions or numeric relationship, faction, and normalized-region score conditions required by TASK-07 | `src/content/schemas/conditions.ts`; `src/content/constants.ts`; `SYSTEMS_DESIGN.md` sections 26–27 | Specification owner | Completed by reviewed corrective commit `c664ad4` | Resolved |
 
 A blocker remains in the history even if work moves to another task.
 
@@ -350,10 +373,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-05 verified; TASK-06 corrective amendment ready for review; TASK-07 blocked before implementation
-- Current task: TASK-06
+- Implementation status: TASK-01 through TASK-06 verified; TASK-07 ready for review
+- Current task: TASK-07
 - Foundation baseline commit: `6979c02`
-- Implementation tasks verified: 5 / 20
+- Implementation tasks verified: 6 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: TASK-06 correction ready for review; TASK-07 remains blocked and no release or publication is authorized
+- Release decision: TASK-07 local implementation ready for review; no release or publication is authorized

@@ -390,7 +390,7 @@ describe("condition amendment regression", () => {
     expect(buildContentRegistry(emptyRegistry(variants)).success).toBe(true);
   });
 
-  it("rejects unknown types and properties without adding evaluation", () => {
+  it("rejects unknown types and properties while exposing the TASK-07 evaluator", () => {
     expect(
       conditionSchema.safeParse({ ...variants[0], type: "entity_score" })
         .success,
@@ -399,7 +399,7 @@ describe("condition amendment regression", () => {
       conditionSchema.safeParse({ ...variants[0], callback: () => true })
         .success,
     ).toBe(false);
-    expect("evaluateCondition" in contentContracts).toBe(false);
+    expect(typeof contentContracts.evaluateCondition).toBe("function");
   });
 
   it("returns precise registry paths for invalid variants", () => {
