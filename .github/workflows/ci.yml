@@ -10,6 +10,44 @@ permissions:
   contents: read
 
 jobs:
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start local Supabase
+        run: pnpm supabase:start
+
+      - name: Reset and migrate local database
+        run: pnpm db:reset
+
+      - name: Lint local database
+        run: pnpm db:lint
+
+      - name: Run database and RLS tests
+        run: pnpm db:test
+
+      - name: Stop local Supabase
+        if: always()
+        run: pnpm supabase:stop --no-backup
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20

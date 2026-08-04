@@ -6,6 +6,8 @@ storybook-static/
 playwright-report/
 test-results/
 .artifacts/
+supabase/.branches/
+supabase/.temp/
 *.tsbuildinfo
 
 .env
@@ -14,4 +16,3 @@ test-results/
 
 .DS_Store
 Thumbs.db
-

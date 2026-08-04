@@ -2,6 +2,8 @@ import "server-only";
 
 import { z } from "zod";
 
+import { EnvironmentConfigurationError } from "@/lib/env/environment-error";
+
 const serverEnvironmentSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
@@ -11,11 +13,17 @@ const serverEnvironmentSchema = z.object({
 export type ServerEnvironment = z.infer<typeof serverEnvironmentSchema>;
 
 export function parseServerEnvironment(
-  environment: NodeJS.ProcessEnv,
+  environment: Readonly<Record<string, string | undefined>>,
 ): ServerEnvironment {
-  return serverEnvironmentSchema.parse({
+  const result = serverEnvironmentSchema.safeParse({
     NODE_ENV: environment.NODE_ENV,
   });
+  if (!result.success) {
+    throw new EnvironmentConfigurationError("server", result.error.issues);
+  }
+  return result.data;
 }
 
-export const serverEnvironment = parseServerEnvironment(process.env);
+export function getServerEnvironment(): ServerEnvironment {
+  return parseServerEnvironment({ NODE_ENV: process.env.NODE_ENV });
+}
