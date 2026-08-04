@@ -10,7 +10,7 @@ export type PoliticalBackgroundId =
   | "civil_service_reformer"
   | "labor_mediator"
   | "provincial_governor"
-  | "security_insider";
+  | "security_committee_chair";
 
 export type MutationReceiptType = "choice_resolution" | "period_advance";
 
@@ -49,24 +49,8 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: {
-          save_id: string;
-          owner_id: string;
-          save_version: "save-1.0.0";
-          content_version: "mvp-0.1.0";
-          schema_version: "schema-1.0.0";
-          revision: number;
-          game_seed: string;
-          political_period: number;
-          selected_background: PoliticalBackgroundId;
-          family_identity: Json;
-          authoritative_state: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          updated_at?: string;
-        };
+        Insert: Record<string, never>;
+        Update: Record<string, never>;
         Relationships: [];
       };
       mutation_history: {

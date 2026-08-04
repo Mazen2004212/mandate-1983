@@ -66,14 +66,14 @@ pnpm test:e2e
 
 ## Repository guide
 
-| Path | Purpose |
-| --- | --- |
-| `src/app` | Next.js routes and application shell |
-| `src/components` | Reusable, accessible UI components |
-| `src/content` | Validated authored-content contracts and runtime content systems |
-| `src/domain` | Pure game-state, initialization, arithmetic, randomization, and calculation logic |
-| `docs` | MVP scope, story canon, architecture, systems design, roadmap, and progress records |
-| `e2e` | Playwright end-to-end tests |
+| Path             | Purpose                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `src/app`        | Next.js routes and application shell                                                |
+| `src/components` | Reusable, accessible UI components                                                  |
+| `src/content`    | Validated authored-content contracts and runtime content systems                    |
+| `src/domain`     | Pure game-state, initialization, arithmetic, randomization, and calculation logic   |
+| `docs`           | MVP scope, story canon, architecture, systems design, roadmap, and progress records |
+| `e2e`            | Playwright end-to-end tests                                                         |
 
 ## Documentation
 

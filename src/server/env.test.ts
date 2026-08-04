@@ -3,9 +3,11 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 let parseServerEnvironment: typeof import("./env").parseServerEnvironment;
+let parseDatabaseEnvironment: typeof import("./env").parseDatabaseEnvironment;
 
 beforeAll(async () => {
-  ({ parseServerEnvironment } = await import("./env"));
+  ({ parseDatabaseEnvironment, parseServerEnvironment } =
+    await import("./env"));
 });
 
 describe("server environment validation", () => {
@@ -22,5 +24,22 @@ describe("server environment validation", () => {
     expect(() =>
       parseServerEnvironment({ NODE_ENV: "secret-runtime-mode" }),
     ).not.toThrow("secret-runtime-mode");
+  });
+
+  it("accepts only a server-side PostgreSQL connection URL", () => {
+    expect(
+      parseDatabaseEnvironment({
+        SUPABASE_DATABASE_URL:
+          "postgresql://postgres:local-placeholder@127.0.0.1:54322/postgres",
+      }),
+    ).toEqual({
+      SUPABASE_DATABASE_URL:
+        "postgresql://postgres:local-placeholder@127.0.0.1:54322/postgres",
+    });
+    expect(() =>
+      parseDatabaseEnvironment({
+        SUPABASE_DATABASE_URL: "https://not-a-database.example.test",
+      }),
+    ).toThrow("Invalid server environment configuration");
   });
 });

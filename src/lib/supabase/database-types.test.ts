@@ -16,8 +16,8 @@ describe("permission-aware database client types", () => {
     expectTypeOf<SaveRow["authoritative_state"]>().toEqualTypeOf<Json>();
   });
 
-  it("narrows browser-role updates to the granted timestamp columns", () => {
-    expectTypeOf<SaveUpdate>().toEqualTypeOf<{ updated_at?: string }>();
+  it("denies browser-role save writes after the server repository boundary", () => {
+    expectTypeOf<SaveUpdate["updated_at"]>().toEqualTypeOf<never>();
     expectTypeOf<ProfileUpdate>().toEqualTypeOf<{ updated_at?: string }>();
     expectTypeOf<MutationUpdate["save_id"]>().toEqualTypeOf<never>();
   });

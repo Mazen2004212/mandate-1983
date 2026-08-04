@@ -2,20 +2,20 @@
 
 ## 1. Current Status
 
-- Project phase: Domain foundation implementation
-- Current task: TASK-10
-- Current task title: Supabase Foundation, Authentication, and RLS
+- Project phase: Secure persistence implementation
+- Current task: TASK-11
+- Current task title: Save Repository and Server Mutation Boundary
 - Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
-- Latest verified baseline commit: `4b12175`
+- Latest verified baseline commit: `5ba6162`
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: TASK-10 local Supabase foundation, migration, 56 database/RLS assertions, 512-test suite, production build, and 7-project E2E gate completed
-- Implementation tasks verified: 9 / 20
+- Last progress update: TASK-11 server-only save repository and atomic PostgreSQL mutation boundary completed locally and are ready for review
+- Implementation tasks verified: 10 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. The mutation-persistence correction is committed at `16dc9ef`, BLK-008 remains resolved, TASK-08 is verified at `51fc127`, and TASK-09 is verified at `4b12175`. TASK-10 is in progress. No preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. The mutation-persistence correction is committed at `16dc9ef`, BLK-008 remains resolved, TASK-08 is verified at `51fc127`, TASK-09 is verified at `4b12175`, and TASK-10 is verified at `5ba6162`. TASK-11 is ready for review with no implementation commit. No preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -30,8 +30,8 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `verified` | TASK-05, TASK-06 | `6fc571f` | 58 focused runtime tests; format, lint, typecheck, 349-test full suite, production build, 7-project E2E, deterministic/boundary scans, and zero-mutation checks passed; implementation reviewed, committed, and pushed | None |
 | TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `verified` | TASK-05, TASK-07 | `51fc127` | Pure atomic mutation engine plus strict executable-effect correction; frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, focused contract/runtime tests, and integrity scans passed; implementation reviewed, committed, and accepted | None |
 | TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `verified` | TASK-04, TASK-05 | `4b12175` | Exact pure integer formulas and outcome resolver; 21 focused tests, 500-test full suite, production build, 7-project E2E, fixed-seed, boundary, invariant, scope, and Git-integrity checks passed; implementation reviewed, committed, and accepted | None |
-| TASK-10 | Supabase Foundation, Authentication, and RLS | C | `ready_for_review` | TASK-03 | None | Pinned local Supabase stack; deterministic migration/reset and lint; 56 positive/negative pgTAP assertions; 12 focused environment/client/type tests; 512-test full suite; production build; 7-project E2E; secret, boundary, scope, and Git-integrity checks passed | None |
-| TASK-11 | Save Repository and Server Mutation Boundary | C | `not_started` | TASK-08, TASK-10 | None | None | None |
+| TASK-10 | Supabase Foundation, Authentication, and RLS | C | `verified` | TASK-03 | `5ba6162` | Pinned local Supabase stack; deterministic migration/reset and lint; 56 positive/negative pgTAP assertions; 12 focused environment/client/type tests; 512-test full suite; production build; 7-project E2E; secret, boundary, scope, and Git-integrity checks passed; implementation reviewed, committed, and accepted | None |
+| TASK-11 | Save Repository and Server Mutation Boundary | C | `ready_for_review` | TASK-08, TASK-10 | None | Server-only repository; exact JSON money serialization; private-schema ownership functions; atomic row-locked TASK-08 mutations; 15 focused application tests, 17 real-PostgreSQL repository tests, 89 pgTAP assertions, 527-test full suite, production and Storybook builds, and 7-project E2E passed | None |
 | TASK-12 | Authentication and New-Game Player Journey | D | `not_started` | TASK-02, TASK-05, TASK-11 | None | None | None |
 | TASK-13 | Office Dashboard and Save Management | D | `not_started` | TASK-02, TASK-11 | None | None | None |
 | TASK-14 | Dialogue and Decision Experience | D | `not_started` | TASK-02, TASK-07, TASK-08, TASK-11 | None | None | None |
@@ -47,6 +47,28 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-11 Implementation Workspace Record
+
+- Task ID: TASK-11
+- Objective: Connect authoritative TASK-03 saves and the existing TASK-08 mutation engine to secure Supabase persistence through a server-only repository and one atomic PostgreSQL transaction boundary, without TASK-12 UI or authentication journeys.
+- Initial repository state: Clean `main` at canonical HEAD `5ba6162`, tracking `origin/main`; `.git` present; commit `83adce8` preserved; TASK-01 through TASK-10 verified after progress reconciliation; verified count `10 / 20`; TASK-12 through TASK-20 unchanged.
+- Authority and skills: Read all required repository documents, the domain/content/mutation/Supabase/migration/test/environment architecture, and every reference for the explicitly activated Supabase-security, game-systems, content-validator, and release-gate skills. Current Supabase RLS/function/connection and node-postgres transaction guidance was checked for the transaction design.
+- Baseline verification: Frozen install, lint, typecheck, the 26-file/512-test suite, production build, 7-project E2E, local database reset/lint, and 56 pgTAP assertions passed. The canonical worktree's format check failed on 16 committed TASK-10 files because of line-ending/format drift, and the requested `pnpm db:start` script did not yet exist; both repository-level baseline defects were corrected and the final commands passed. Docker Desktop initially had to be started before the local Supabase stack could run.
+- Architecture: Added `src/server/persistence` contracts, serialization, PostgreSQL gateway, repository, and exports. `createSave`, `getSaveById`, `listSaveSummaries`, `deleteSave`, `resolveChoiceForSave`, and `advanceSavePeriod` are server-only. `pg` `8.22.0` and `@types/pg` `8.20.3` are the only added dependencies; no existing version changed.
+- Serialization: The eight `MoneyMinor` economy fields use canonical base-10 strings inside JSON, never `Number`; malformed, non-canonical, decimal, exponential, negative-zero, and out-of-range encodings fail closed. Loads validate exact save/schema/content versions, indexed metadata, family identity, full state, event history, and timestamps through existing Zod contracts without silent repair.
+- Authentication and ownership: Every operation resolves the actor with request-scoped `auth.getUser()`. The database transaction installs only that verified actor in transaction-local JWT claims and assumes the `authenticated` role. Owner input is ignored for create, absent from mutation intent, and never accepted by a private function as authority.
+- Operations and projections: Create/load validate the complete stored save but return only `PublicSaveSummary`; lists are ordered by `updated_at` descending then save ID and contain no authoritative state or seed. Missing and cross-user records share the same safe not-found result. Owned deletion cascades normalized mutation history.
+- Atomic mutation strategy: One node-postgres transaction locks the owned save row, reads the normalized persisted receipt before ordinary revision handling, runs the unmodified TASK-08 TypeScript engine while holding the lock, and calls one private commit function that updates the save and inserts the matching receipt together. SQL owns locking, compare-and-swap, and commit; TASK-08 retains effect semantics.
+- Revision and idempotency evidence: Tests prove exactly one revision increment, no skip, one receipt, stale-revision rejection without writes, two different same-revision requests producing one commit and one conflict, two concurrent exact retries producing one apply and one `already_applied`, stable persisted replay without timestamp change, and conflicting key reuse taking precedence over stale revision.
+- Database changes: Added ordered migration `20260804110000_task_11_save_repository.sql`, including the authoritative `security_committee_chair` background forward-fix, removal of the timestamp trigger that conflicted with exact domain mutation time, direct save/history grant revocation, and seven private repository functions. The functions are outside exposed PostgREST schemas, derive or check `auth.uid()`, use an empty `search_path`, and have explicit `authenticated` execute grants only.
+- Security and rollback evidence: Anonymous, cross-user, direct browser table writes, direct receipt inserts, arbitrary owner/effect input, unauthorized function execution, broad execute grants, and private-schema Data API exposure are denied. pgTAP constraint-failure fixtures prove save-write and receipt-write failures roll back both sides; repository engine failure likewise leaves revision and history unchanged. Player responses use stable sanitized messages and do not expose SQL, policy, or record-existence details.
+- Tests and final verification: Added 15 focused application tests and 17 serial real-PostgreSQL repository tests; final `pnpm install --frozen-lockfile`, format, lint, typecheck, 27-file/527-test suite, production build, Storybook build, 7-project E2E, database start/reset/lint, 89 pgTAP assertions, repository integration rerun, and `git diff --check` passed. The known Storybook chunk-size advisory remains non-blocking and predates this non-UI task.
+- Documentation and CI: Updated the local Supabase guide for the server-only database URL, private functions, direct-grant revocation, atomic transaction, and repository test command. CI now runs the real PostgreSQL repository suite after database/RLS tests. Documentation claims were checked against source, migration, package scripts, CLI output, and executed commands under the docs-guard workflow.
+- Boundary confirmation: No TASK-12 page, player-facing Auth or save UI, production content, deployment, formula change, mutation-semantic fork, service-role client/key, real tracked secret, staged file, commit, or push was added. No direct browser authoritative write or unsafe multi-call pseudo-transaction exists.
+- Known limitations: The repository exposes safe summary and mutation projections only; TASK-12 and TASK-13 still own player flows and screen-specific projections. Compatibility failures reject unsupported versions rather than migrating. The server PostgreSQL connection must be configured separately in each environment, and no cloud project or production rollback was exercised.
+- Implementation commit: None; changes are unstaged and uncommitted as required.
+- Review decision: Ready for review
 
 ### TASK-10 Implementation Workspace Record
 
@@ -69,8 +91,8 @@ The TASK-01 through TASK-04 workspace records below are historical execution evi
 - CI and operations: CI has an isolated local-database job for frozen install, Supabase start, reset, lint, pgTAP, and unconditional stop. `docs/SUPABASE_LOCAL.md` records setup, untracked local environment, grants/policies, local inspection, recovery, and the no-cloud boundary.
 - Boundary confirmation: No TASK-11 repository, mutation action, database choice resolution, player-facing authentication/save UI, deployment, production content/data, linked Supabase project, real secret, service-role client/key, staged file, commit, or push was added.
 - Known limitations: Full authoritative JSON validation and atomic save/receipt persistence intentionally await TASK-11. Authenticated direct authoritative-state updates remain denied until that trusted boundary exists. `@supabase/ssr` is official but pre-1.0 and pinned for reviewable upgrades. Optional Studio remains disabled after its first-run image failed health validation; database/API/Auth verification is unaffected.
-- Implementation commit: None; changes are unstaged and uncommitted as required.
-- Review decision: Ready for review
+- Implementation commit: `5ba6162`; reviewed, committed, and accepted after this workspace record was created.
+- Review decision: Verified
 
 ### TASK-09 Implementation Workspace Record
 
@@ -388,6 +410,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-04 | TASK-08 | Authoritative mutation and delayed-effect engine plus executable-effect correction | Pure choice resolution, closed typed effect dispatch, history-ledger retries, delayed execution and payload conditions, one-period advancement, 62 mutation tests, 45 focused contract tests, frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, boundary and Git-integrity checks | Local Windows | Ready for review; every required command passed | `docs/CONTENT_ARCHITECTURE.md`, `docs/SYSTEMS_DESIGN.md`, `src/content/{constants.ts,registry.ts,schemas/effects.ts,effect-contract-correction.test.ts,runtime/**}`, `docs/PROGRESS.md` | Codex | BLK-008 resolved at committed HEAD `16dc9ef`; ambiguous effect and direct at-period shapes are rejected before runtime; all accepted MVP effects execute deterministically; no formula, persistence, UI, staging, commit, or push. |
 | 2026-08-04 | TASK-09 | Exact MVP formula and outcome implementation | Clean canonical preflight; all authority and skill references; frozen install; baseline gate; exact pure calculations; 21 focused tests; format; lint; typecheck; 500-test suite; production build; 7-project E2E; fixed-seed, boundary, outcome, scope, and Git-integrity checks | Local Windows | Ready for review; every required local command passed | `src/domain/calculations/**`, `src/domain/index.ts`, `docs/PROGRESS.md` | Codex | 21 new tests; all three outcomes reachable; no TASK-10, persistence, UI, production content, staging, commit, or push. |
 | 2026-08-04 | TASK-10 | Supabase Auth, storage, grants, migration, and RLS foundation | Clean canonical preflight; pinned packages; local start/status; deterministic reset; schema lint; 56 positive/negative pgTAP assertions; format; lint; typecheck; 512-test suite; production build; 7-project E2E; environment, secret, boundary, scope, and Git-integrity checks | Local Windows / Docker Desktop / PostgreSQL 17 | Ready for review; all required implementation gates passed | `supabase/**`, Supabase environment/clients/types/tests, CI, local setup documentation, `docs/PROGRESS.md` | Codex | Initial Docker/WSL and optional Studio health failures were diagnosed and recovered; first pgTAP overload errors and concurrent Docker/Vitest memory exhaustion were corrected before successful final gates. No TASK-11, cloud connection, deployment, real secret, staging, commit, or push. |
+| 2026-08-04 | TASK-11 | Server-only save repository and atomic mutation persistence | Clean canonical preflight; exact JSON money round trips; strict load/compatibility validation; request-scoped Auth; private-schema ownership functions; real row-lock concurrency; save/receipt rollback; 15 focused application tests; 17 repository integration tests; 89 pgTAP assertions; frozen install; format; lint; typecheck; 527-test suite; production and Storybook builds; 7-project E2E; boundary and Git-integrity checks | Local Windows / Docker Desktop / PostgreSQL 17 | Ready for review; all required final commands passed | `src/server/persistence/**`, TASK-11 migration/tests, Supabase types/environment/CI/docs, domain summary schema, `docs/PROGRESS.md` | Codex | Baseline format and missing-script failures were corrected and retained as evidence. No TASK-12 UI, production content, cloud deployment, service role, staging, commit, or push. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -401,7 +424,8 @@ An unexecuted command must not be entered as passed evidence.
 | DEC-008 | 2026-08-04 | TASK-08 | Stop before mutation implementation | Existing strict save/history state cannot store the accepted idempotency key and request identity required to return exact retries safely and reject conflicting key reuse | Add undocumented state fields; misuse delayed-effect keys; process-global cache; weaken retry/conflict guarantees | `docs/PROGRESS.md` only | Codex | Specification owner must approve compatible save/history and delayed-runtime schema changes, then restart TASK-08 from a clean reviewed commit |
 | DEC-009 | 2026-08-04 | TASK-08 | Adopt mutation-persistence owner decisions | The approved contract makes event history the sole globally unique mutation ledger and persists delayed execution snapshots without a new root domain or schema-version change | Add a separate ledger domain; hash requests; generate receipt IDs; derive delayed behavior from mutable registry content | `docs/SYSTEMS_DESIGN.md`, domain/content schemas, TASK-07 compatibility tests, `docs/PROGRESS.md` | Specification owner | Review and commit this corrective amendment before restarting the TASK-08 engine implementation |
 | DEC-010 | 2026-08-04 | TASK-08 | Narrow pre-publication effects to complete executable contracts | A validated authored effect must have every target, field, value, unit, and operation needed for deterministic mutation; ambiguous shapes cannot remain normal runtime failures | Invent targets or values; silently skip effects; accept content that later returns unsupported | `docs/CONTENT_ARCHITECTURE.md`, `docs/SYSTEMS_DESIGN.md`, effect schemas/registry/runtime/tests, `docs/PROGRESS.md` | Specification owner | Intelligence mutation remains deferred until a versioned runtime-state domain exists; all current accepted effects are executable |
-| DEC-011 | 2026-08-04 | TASK-10 | Keep authoritative save writes and receipt appends outside the browser role | TASK-11 owns the trusted atomic transaction boundary; allowing direct state replacement in TASK-10 would make hidden state client-authoritative and bypass revision/idempotency validation | Grant full owner update/receipt insert; create an early service-role client; implement the TASK-11 repository now | RLS migration, permission-aware client types, database tests, local operations documentation | Codex | TASK-11 must add a reviewed server transaction pathway before persisted authoritative mutations are enabled |
+| DEC-011 | 2026-08-04 | TASK-10 | Keep authoritative save writes and receipt appends outside the browser role | TASK-11 owns the trusted atomic transaction boundary; allowing direct state replacement in TASK-10 would make hidden state client-authoritative and bypass revision/idempotency validation | Grant full owner update/receipt insert; create an early service-role client; implement the TASK-11 repository now | RLS migration, permission-aware client types, database tests, local operations documentation | Codex | Completed locally by the TASK-11 server transaction pathway; pending TASK-11 review |
+| DEC-012 | 2026-08-04 | TASK-11 | Hold the row lock across the existing TypeScript mutation and commit through an unexposed private PostgreSQL function | PostgreSQL cannot execute the TypeScript engine; a server-held transaction preserves TASK-08 semantics while making save and receipt persistence atomic and keeping precomputed state outside the browser/Data API | Separate Supabase calls; browser RPC accepting authoritative state; SQL reimplementation of effects; service-role client | Server persistence modules, TASK-11 migration, CI, tests, local operations documentation | Codex | TASK-12/13 callers must submit intent only and consume the safe repository projections |
 
 Use this log for deliberate deviations from the roadmap or authoritative documents.
 
@@ -426,19 +450,19 @@ Warnings cannot be accepted implicitly.
 
 | Release gate | Status |
 |---|---|
-| Repository integrity | Passed for TASK-10 local integration scope |
+| Repository integrity | Passed for TASK-11 local integration scope |
 | Build and static verification | Passed |
-| Unit tests | Passed: 26 files, 512 tests |
-| Integration tests | Passed through the full application/domain suite and 56 local database/RLS assertions |
+| Unit tests | Passed: 27 files, 527 tests |
+| Integration tests | Passed: 17 real-PostgreSQL repository tests and 89 local database/RLS assertions |
 | End-to-end tests | Passed: 7 existing browser projects |
 | Game-system invariants | Existing suite passed; no simulation logic changed |
 | Content validation | Not applicable; no authored content changed |
 | Narrative and continuity | Not applicable; no narrative content changed |
 | UI and accessibility | Existing 7-project regression passed; no UI changed |
 | Character art | Not evaluated |
-| Security and RLS | Passed local positive/negative RLS, grants, ownership, append-only, and privileged-function checks |
-| Database migrations | Local reset/apply and lint passed for the ordered TASK-10 migration |
-| Environment and secrets | Sanitized environment tests and secret/client-boundary scans passed; no real credential tracked |
+| Security and RLS | Passed local positive/negative RLS, direct-grant denial, ownership, private-function, concurrency, and atomic-rollback checks |
+| Database migrations | Local reset/apply and lint passed for the ordered TASK-10 and TASK-11 migrations |
+| Environment and secrets | Sanitized public/server/database environment tests and secret/client-boundary scans passed; no real credential tracked |
 | Performance | Not evaluated |
 | Browser verification | Existing surface passed 7-project regression |
 | Preview deployment | Not evaluated |
@@ -446,7 +470,7 @@ Warnings cannot be accepted implicitly.
 | Post-deployment verification | Not evaluated |
 
 - Final release decision: Incomplete evaluation
-- Reason: TASK-10 passed its required local implementation and security gate, but TASK-11 persistence integration, release-candidate evaluation, and deployment remain outside this task.
+- Reason: TASK-11 passed its required local repository, persistence, concurrency, and security gates, but review acceptance, later player journeys, release-candidate evaluation, and deployment remain outside this task.
 
 ## 9. Progress Update Rules
 
@@ -465,10 +489,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-09 verified; TASK-10 ready for review
-- Current task: TASK-10
+- Implementation status: TASK-01 through TASK-10 verified; TASK-11 ready for review
+- Current task: TASK-11
 - Foundation baseline commit: `6979c02`
-- Implementation tasks verified: 9 / 20
+- Implementation tasks verified: 10 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: TASK-10 is ready for implementation review; no release or publication is authorized
+- Release decision: TASK-11 is ready for review; no release or publication is authorized

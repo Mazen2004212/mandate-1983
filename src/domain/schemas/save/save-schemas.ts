@@ -2,10 +2,7 @@ import { z } from "zod";
 
 import { saveIdSchema, userIdSchema } from "../../ids/identifier-schemas";
 import { politicalBackgroundIdSchema } from "../common/classifications";
-import {
-  familyIdentitySchema,
-  familyNameSchema,
-} from "../common/family-identity";
+import { familyIdentitySchema } from "../common/family-identity";
 import {
   politicalPeriodSchema,
   revisionSchema,
@@ -18,6 +15,20 @@ import {
   schemaVersionSchema,
 } from "../common/versions";
 import { rootGameStateSchema } from "../state/root-state";
+
+const CONTROL_OR_FORMAT_CHARACTER = /[\p{Cc}\p{Cf}]/u;
+
+export const presidentDisplayNameSchema = z
+  .string()
+  .min(1)
+  .max(129)
+  .refine((value) => value === value.trim(), {
+    message: "Display names cannot have leading or trailing whitespace.",
+  })
+  .refine((value) => !CONTROL_OR_FORMAT_CHARACTER.test(value), {
+    message: "Display names cannot contain control or format characters.",
+  })
+  .brand<"PresidentDisplayName">();
 
 export const authoritativeSaveSchema = z
   .object({
@@ -84,7 +95,7 @@ export const publicSaveSummarySchema = z
     revision: revisionSchema,
     politicalPeriod: politicalPeriodSchema,
     selectedBackground: politicalBackgroundIdSchema,
-    presidentDisplayName: familyNameSchema,
+    presidentDisplayName: presidentDisplayNameSchema,
     createdAt: utcTimestampSchema,
     updatedAt: utcTimestampSchema,
   })

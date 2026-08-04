@@ -32,4 +32,30 @@ describe("Supabase module and secret boundaries", () => {
     expect(publicEnvironment).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
     expect(exampleEnvironment).not.toContain("SUPABASE_SERVICE_ROLE_KEY=");
   });
+
+  it("keeps the save repository and database credential server-only", () => {
+    const repository = source("src/server/persistence/save-repository.ts");
+    const gateway = source("src/server/persistence/postgres-gateway.ts");
+    const serverEnvironment = source("src/server/env.ts");
+    const browserClient = source("src/lib/supabase/browser-client.ts");
+    expect(repository.startsWith('import "server-only";')).toBe(true);
+    expect(gateway.startsWith('import "server-only";')).toBe(true);
+    expect(serverEnvironment).toContain("SUPABASE_DATABASE_URL");
+    expect(browserClient).not.toContain("SUPABASE_DATABASE_URL");
+    expect(repository).not.toContain("SERVICE_ROLE");
+    expect(gateway).not.toContain("SERVICE_ROLE");
+  });
+
+  it("keeps private persistence functions outside exposed Data API schemas", () => {
+    const config = source("supabase/config.toml");
+    const migration = source(
+      "supabase/migrations/20260804110000_task_11_save_repository.sql",
+    );
+    expect(config).toContain('schemas = ["public", "graphql_public"]');
+    expect(config).not.toContain(
+      'schemas = ["public", "graphql_public", "mandate_private"]',
+    );
+    expect(migration).not.toContain("create function public.");
+    expect(migration).toContain("set search_path = ''");
+  });
 });

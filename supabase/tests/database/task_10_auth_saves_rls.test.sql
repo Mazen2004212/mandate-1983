@@ -62,7 +62,7 @@ select throws_ok(
   'profile ownership cannot be modified'
 );
 
-select lives_ok(
+select throws_ok(
   $sql$
     insert into public.saves (
       save_id, owner_id, save_version, content_version, schema_version,
@@ -77,18 +77,23 @@ select lives_ok(
       '{"timeline":{"politicalPeriod":0},"identity":{"selectedBackground":"civil_service_reformer","familyIdentity":{"surname":"Varen"}}}'::jsonb
     )
   $sql$,
-  'user A can insert a valid save owned by user A'
+  '42501',
+  'permission denied for table saves',
+  'authenticated clients cannot insert authoritative saves directly after TASK-11'
 );
 
-select results_eq(
-  $$select count(*)::integer from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  array[1],
-  'user A can read their own save'
+select throws_ok(
+  $$select * from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
+  '42501',
+  'permission denied for table saves',
+  'authenticated clients cannot read hidden authoritative saves directly after TASK-11'
 );
 
-select lives_ok(
+select throws_ok(
   $$update public.saves set updated_at = statement_timestamp() where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  'user A can perform the TASK-10 timestamp-only save update'
+  '42501',
+  'permission denied for table saves',
+  'authenticated clients cannot update save timestamps directly after TASK-11'
 );
 
 select throws_ok(
@@ -99,6 +104,20 @@ select throws_ok(
 );
 
 reset role;
+
+insert into public.saves (
+  save_id, owner_id, save_version, content_version, schema_version,
+  revision, game_seed, political_period, selected_background,
+  family_identity, authoritative_state
+) values (
+  '11111111-1111-4111-8111-111111111111',
+  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  'save-1.0.0', 'mvp-0.1.0', 'schema-1.0.0', 0,
+  'task_10_seed_value_0001', 0, 'civil_service_reformer',
+  '{"surname":"Varen"}'::jsonb,
+  '{"timeline":{"politicalPeriod":0},"identity":{"selectedBackground":"civil_service_reformer","familyIdentity":{"surname":"Varen"}}}'::jsonb
+);
+
 set local role authenticated;
 select set_config(
   'request.jwt.claims',
@@ -106,10 +125,11 @@ select set_config(
   true
 );
 
-select results_eq(
-  $$select count(*)::integer from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  array[0],
-  'user B cannot read user A save'
+select throws_ok(
+  $$select * from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
+  '42501',
+  'permission denied for table saves',
+  'user B cannot directly read user A save'
 );
 
 select throws_ok(
@@ -128,29 +148,22 @@ select throws_ok(
     )
   $sql$,
   '42501',
-  'new row violates row-level security policy for table "saves"',
-  'user B cannot forge user A ownership on insert'
+  'permission denied for table saves',
+  'user B cannot directly forge user A ownership on insert'
 );
 
-select results_eq(
-  $$with changed as (
-      update public.saves
-      set updated_at = statement_timestamp()
-      where save_id = '11111111-1111-4111-8111-111111111111'
-      returning 1
-    ) select count(*)::integer from changed$$,
-  array[0],
-  'user B cannot update user A save'
+select throws_ok(
+  $$update public.saves set updated_at = statement_timestamp() where save_id = '11111111-1111-4111-8111-111111111111'$$,
+  '42501',
+  'permission denied for table saves',
+  'user B cannot directly update user A save'
 );
 
-select results_eq(
-  $$with removed as (
-      delete from public.saves
-      where save_id = '11111111-1111-4111-8111-111111111111'
-      returning 1
-    ) select count(*)::integer from removed$$,
-  array[0],
-  'user B cannot delete user A save'
+select throws_ok(
+  $$delete from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
+  '42501',
+  'permission denied for table saves',
+  'user B cannot directly delete user A save'
 );
 
 reset role;
@@ -479,15 +492,17 @@ select set_config(
   true
 );
 
-select results_eq(
-  $$select count(*)::integer from public.mutation_history where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  array[1],
-  'user A can read history for their own save'
+select throws_ok(
+  $$select * from public.mutation_history where save_id = '11111111-1111-4111-8111-111111111111'$$,
+  '42501',
+  'permission denied for table mutation_history',
+  'authenticated clients cannot read normalized history directly after TASK-11'
 );
-select results_eq(
-  $$select count(*)::integer from public.mutation_history where save_id = '88888888-8888-4888-8888-888888888888'$$,
-  array[0],
-  'user A cannot read history for user B save'
+select throws_ok(
+  $$select * from public.mutation_history where save_id = '88888888-8888-4888-8888-888888888888'$$,
+  '42501',
+  'permission denied for table mutation_history',
+  'authenticated clients cannot read another user history directly'
 );
 select throws_ok(
   $sql$
@@ -556,8 +571,8 @@ select ok(
   'authenticated has no mutation-history DELETE grant'
 );
 select ok(
-  has_column_privilege('authenticated', 'public.saves', 'updated_at', 'UPDATE'),
-  'authenticated can update only the permitted save timestamp column'
+  not has_column_privilege('authenticated', 'public.saves', 'updated_at', 'UPDATE'),
+  'authenticated cannot update save timestamps directly after TASK-11'
 );
 select ok(
   not has_column_privilege('authenticated', 'public.saves', 'authoritative_state', 'UPDATE'),
@@ -572,8 +587,8 @@ select ok(
   'TASK-10 grants no unused Data API save privilege to service_role'
 );
 select ok(
-  not has_schema_privilege('authenticated', 'mandate_private', 'USAGE'),
-  'authenticated cannot use the private function schema'
+  has_schema_privilege('authenticated', 'mandate_private', 'USAGE'),
+  'authenticated direct server sessions can use explicitly granted private functions'
 );
 select ok(
   not has_function_privilege('authenticated', 'mandate_private.handle_new_auth_user()', 'EXECUTE'),
@@ -609,14 +624,11 @@ select set_config(
   '{"sub":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa","role":"authenticated"}',
   true
 );
-select lives_ok(
+select throws_ok(
   $$delete from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  'user A can delete their own save and its history cascades'
-);
-select results_eq(
-  $$select count(*)::integer from public.saves where save_id = '11111111-1111-4111-8111-111111111111'$$,
-  array[0],
-  'the deleted save is no longer visible'
+  '42501',
+  'permission denied for table saves',
+  'authenticated clients cannot delete saves directly after TASK-11'
 );
 
 reset role;
