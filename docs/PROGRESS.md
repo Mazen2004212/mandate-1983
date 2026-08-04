@@ -3,19 +3,19 @@
 ## 1. Current Status
 
 - Project phase: Domain foundation implementation
-- Current task: TASK-08
-- Current task title: Authoritative Mutation and Delayed-Effect Engine
+- Current task: TASK-09
+- Current task title: Economic, Government, Faction, Region, and Outcome Calculations
 - Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
-- Latest verified baseline commit: `16dc9ef`
+- Latest verified baseline commit: `51fc127`
 - Preview URL: None
 - Production URL: None
 - Active blocker: None
-- Last progress update: TASK-08 executable-effect correction completed; typed mutation contracts, delayed payload conditions, and the full local gate pass
-- Implementation tasks verified: 7 / 20
+- Last progress update: TASK-09 pure formula layer, outcome resolver, 21 focused tests, 500-test suite, production build, and 7-project E2E gate completed
+- Implementation tasks verified: 8 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. The mutation-persistence correction is committed at `16dc9ef`, BLK-008 is resolved, and TASK-08 is ready for review with no implementation commit. No preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. The mutation-persistence correction is committed at `16dc9ef`, BLK-008 remains resolved, and TASK-08 is verified at `51fc127`. TASK-09 is ready for review with no implementation commit. No preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -28,8 +28,8 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-05 | Initial State and Political Backgrounds | B | `verified` | TASK-04 | `0ba241f` | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed; implementation reviewed and accepted | None |
 | TASK-06 | Content Schemas, Registries, and Manifest | B | `verified` | TASK-03 | `2ff7d49` (original); `c664ad4` (corrective contract) | Original implementation and numeric condition-contract correction reviewed, committed, and pushed; final corrective gate passed 291 tests and 7 E2E projects | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `verified` | TASK-05, TASK-06 | `6fc571f` | 58 focused runtime tests; format, lint, typecheck, 349-test full suite, production build, 7-project E2E, deterministic/boundary scans, and zero-mutation checks passed; implementation reviewed, committed, and pushed | None |
-| TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `ready_for_review` | TASK-05, TASK-07 | None | Pure atomic mutation engine plus strict executable-effect correction; frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, focused contract/runtime tests, and integrity scans passed | None |
-| TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `not_started` | TASK-04, TASK-05 | None | None | None |
+| TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `verified` | TASK-05, TASK-07 | `51fc127` | Pure atomic mutation engine plus strict executable-effect correction; frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, focused contract/runtime tests, and integrity scans passed; implementation reviewed, committed, and accepted | None |
+| TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `ready_for_review` | TASK-04, TASK-05 | None | Exact pure integer formulas and outcome resolver; 21 focused tests, 500-test full suite, production build, 7-project E2E, fixed-seed, boundary, invariant, scope, and Git-integrity checks passed | None |
 | TASK-10 | Supabase Foundation, Authentication, and RLS | C | `not_started` | TASK-03 | None | None | None |
 | TASK-11 | Save Repository and Server Mutation Boundary | C | `not_started` | TASK-08, TASK-10 | None | None | None |
 | TASK-12 | Authentication and New-Game Player Journey | D | `not_started` | TASK-02, TASK-05, TASK-11 | None | None | None |
@@ -47,6 +47,24 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-09 Implementation Workspace Record
+
+- Task ID: TASK-09
+- Objective: Implement the documented MVP economic, confidence, government, faction, relationship, memory, regional, security, diplomatic, family, media, and outcome calculations as pure deterministic domain functions, without period mutation, persistence, UI, or later-roadmap systems.
+- Initial repository state: Clean `main` at canonical HEAD `51fc127`, tracking `origin/main`; `.git` present; TASK-01 through TASK-08 verified; verified count reconciled to `8 / 20`; TASK-09 moved from `not_started` to `in_progress`; TASK-10 through TASK-20 unchanged.
+- Authority and skills: Read `AGENTS.md`, all six authoritative project documents, the complete source architecture, and all references for the explicitly activated game-systems, content-validator, narrative-author, and release-gate skills. `docs/SYSTEMS_DESIGN.md` controlled formulas, units, order, clamps, outcome thresholds, and canonical IDs; no production narrative or content was authored.
+- Baseline verification: `pnpm install --frozen-lockfile`, format, lint, typecheck, the 20-file/479-test suite, and production build passed before implementation. Build-generated `next-env.d.ts` changes were restored.
+- Architecture: Added framework-independent modules under `src/domain/calculations` and exported them through `src/domain/index.ts`. Functions parse strict TASK-03 state inputs, reuse TASK-04 integer helpers, return calculated values or projections, and never mutate or advance authoritative saves.
+- Formula coverage: Exact treasury/arrears settlement; all seven economic derived scores; inflation, growth, unemployment, revenue, consumer and investor confidence projections; faction-trust and regional averages; legitimacy, approval, and cabinet projections; faction grievance/mobilization/pressure; relationship cooperation/candor; memory decay/pressure; regional stress/unrest/approval; security instability/border escalation; foreign leverage; family unity; media sentiment/climate; and all three MVP outcome scores and eligibility paths.
+- Numeric integrity: Exact-money, ratio, media, and aggregate-memory intermediates use `bigint`; TASK-04 half-away-from-zero rounding, weighted averages, clamps, and bounded `approach` are reused. Authored relief/shock ranges, normalized inputs, empty-minister averages, invalid saves, pre-creation memory ages, and zero media denominators are rejected.
+- Outcome resolution: Validated Chapter 1 state selects Civic Stabilization, Ordered Emergency, or the intentional Fractured Mandate fallback in documented priority order. The result includes resolution period, all scores, eligibility booleans, safe contributing values, and a concise developer explanation; incomplete chapters return no outcome and invalid state throws rather than falling back.
+- Determinism and invariants: Same fixed-seed authoritative saves replay to identical score/resolution results; formula outputs contain no randomness or current-time read. Tests prove exact arithmetic, clamps, bounded approach, all outcome reachability/priority/flags, regional independence, permanent and decaying memories, final-state validation, and zero input mutation. The formulas are seed-independent by specification; the save seed remains the replay identity.
+- Correction history: The first focused run passed 14 of 21 tests; seven failures exposed incorrect hard-coded expectations and an invalid memory fixture, which were corrected against the authoritative formulas and schemas. A later post-edit format check identified `political.ts`; Prettier was applied and the complete static/focused gate reran successfully. No failing result is represented as a pass.
+- Final verification: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, focused 21-test calculation suite, full 21-file/500-test suite, production build, 7-project Playwright E2E, `git diff --check`, deterministic/scope/integrity scans, and final status inspection passed. Build-generated `next-env.d.ts` changes were restored.
+- Boundary confirmation: No TASK-10, election, coup, war, balance-certification, state mutation, period advancement, persistence, database, Supabase, SQL, migration, authentication, UI, production content, package, lockfile, generated ID, direct randomness, clock read, suppression, unsafe cast, staging, commit, or push was added.
+- Implementation commit: None; changes are unstaged and uncommitted as required.
+- Review decision: Ready for review
 
 ### TASK-08 Implementation Workspace Record
 
@@ -344,6 +362,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-04 | TASK-08 | Preflight, baseline, and authoritative mutation-contract audit | Clean root/branch/HEAD verification; governing documents and four activated skills; complete domain/content architecture inspection; frozen install; format; lint; typecheck; 349-test suite; production build | Local Windows | Baseline passed; TASK-08 blocked before source implementation | `src/domain/schemas/state/runtime.ts`, `src/domain/schemas/save/save-schemas.ts`, `src/content/schemas/runtime-content.ts`, `docs/PROGRESS.md` | Codex | Existing strict save/history cannot persist choice-mutation idempotency request identity; delayed runtime state also omits authored expiry/failure behavior. No TASK-08 or TASK-09 source was added. |
 | 2026-08-04 | TASK-08 | Corrective mutation-persistence contract amendment | Strict receipt union, idempotency and delayed-snapshot invariants, TASK-07 compatibility, focused 77-test run, frozen install, format, lint, typecheck, 372-test suite, production build, 7-project E2E, boundary and Git-integrity checks | Local Windows | Ready for review; BLK-008 technically corrected but open pending review and commit | `docs/SYSTEMS_DESIGN.md`, `src/domain/schemas/state/**`, shared classifications, TASK-07 compatibility files, focused tests, `docs/PROGRESS.md` | Codex | 23 new tests; unchanged `schema-1.0.0`; no mutation engine, executor, formula, persistence implementation, staging, commit, or push. |
 | 2026-08-04 | TASK-08 | Authoritative mutation and delayed-effect engine plus executable-effect correction | Pure choice resolution, closed typed effect dispatch, history-ledger retries, delayed execution and payload conditions, one-period advancement, 62 mutation tests, 45 focused contract tests, frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, boundary and Git-integrity checks | Local Windows | Ready for review; every required command passed | `docs/CONTENT_ARCHITECTURE.md`, `docs/SYSTEMS_DESIGN.md`, `src/content/{constants.ts,registry.ts,schemas/effects.ts,effect-contract-correction.test.ts,runtime/**}`, `docs/PROGRESS.md` | Codex | BLK-008 resolved at committed HEAD `16dc9ef`; ambiguous effect and direct at-period shapes are rejected before runtime; all accepted MVP effects execute deterministically; no formula, persistence, UI, staging, commit, or push. |
+| 2026-08-04 | TASK-09 | Exact MVP formula and outcome implementation | Clean canonical preflight; all authority and skill references; frozen install; baseline gate; exact pure calculations; 21 focused tests; format; lint; typecheck; 500-test suite; production build; 7-project E2E; fixed-seed, boundary, outcome, scope, and Git-integrity checks | Local Windows | Ready for review; every required local command passed | `src/domain/calculations/**`, `src/domain/index.ts`, `docs/PROGRESS.md` | Codex | 21 new tests; all three outcomes reachable; no TASK-10, persistence, UI, production content, staging, commit, or push. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -381,27 +400,27 @@ Warnings cannot be accepted implicitly.
 
 | Release gate | Status |
 |---|---|
-| Repository integrity | Not evaluated |
-| Build and static verification | Not evaluated |
-| Unit tests | Not evaluated |
-| Integration tests | Not evaluated |
-| End-to-end tests | Not evaluated |
-| Game-system invariants | Not evaluated |
-| Content validation | Not evaluated |
-| Narrative and continuity | Not evaluated |
-| UI and accessibility | Not evaluated |
+| Repository integrity | Passed for TASK-09 local integration scope |
+| Build and static verification | Passed |
+| Unit tests | Passed: 21 files, 500 tests |
+| Integration tests | Passed through full domain suite |
+| End-to-end tests | Passed: 7 existing browser projects |
+| Game-system invariants | Passed for implemented TASK-09 formulas |
+| Content validation | Not applicable; no authored content changed |
+| Narrative and continuity | Not applicable; no narrative content changed |
+| UI and accessibility | Existing 7-project regression passed; no UI changed |
 | Character art | Not evaluated |
-| Security and RLS | Not evaluated |
-| Database migrations | Not evaluated |
-| Environment and secrets | Not evaluated |
+| Security and RLS | Not applicable; no security boundary changed |
+| Database migrations | Not applicable; no database work |
+| Environment and secrets | Passed scope scan; no environment or secret change |
 | Performance | Not evaluated |
-| Browser verification | Not evaluated |
+| Browser verification | Existing surface passed 7-project regression |
 | Preview deployment | Not evaluated |
 | Rollback | Not evaluated |
 | Post-deployment verification | Not evaluated |
 
 - Final release decision: Incomplete evaluation
-- Reason: TASK-08 passed its required local implementation gate, but release-candidate evaluation and deployment remain outside this task.
+- Reason: TASK-09 passed its required local implementation gate, but balance certification, release-candidate evaluation, and deployment remain outside this task.
 
 ## 9. Progress Update Rules
 
@@ -420,10 +439,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-07 verified; TASK-08 ready for review after executable-effect correction
-- Current task: TASK-08
+- Implementation status: TASK-01 through TASK-08 verified; TASK-09 ready for review
+- Current task: TASK-09
 - Foundation baseline commit: `6979c02`
-- Implementation tasks verified: 7 / 20
+- Implementation tasks verified: 8 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: TASK-08 is ready for implementation review; no release or publication is authorized
+- Release decision: TASK-09 is ready for implementation review; no release or publication is authorized
