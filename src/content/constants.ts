@@ -66,7 +66,6 @@ export const CONDITIONAL_EFFECT_TIMINGS = [
   "after_base_effects",
   "after_relationship_updates",
   "after_memory_creation",
-  "at_period_advancement",
 ] as const;
 
 export const CANONICAL_INSTITUTION_IDS = [

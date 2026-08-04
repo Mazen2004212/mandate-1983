@@ -385,18 +385,24 @@ describe("condition, effect, delayed, memory, and flag contracts", () => {
       }).success,
     ).toBe(false);
   });
-  it("accepts score, signed-weight, basis-point, and exact-money effects", () => {
+  it("accepts score, memory-weight, basis-point, and exact-money effects", () => {
     expect(effectSchema.safeParse(effect()).success).toBe(true);
     expect(
-      effectSchema.safeParse(
-        effect({
-          type: "signed_weight_adjustment",
-          targetDomain: "media",
-          targetField: "media.sentiment",
-          value: -2,
-          unit: "signed_weight",
-        }),
-      ).success,
+      effectSchema.safeParse({
+        id: "effect_memory_weight_fixture",
+        type: "memory_weight_adjustment",
+        memoryId: "memory_test_fixture",
+        field: "emotionalWeight",
+        operation: "adjust",
+        value: -2,
+        unit: "signed_weight",
+        sourceScenarioId: "scenario_test_fixture",
+        sourceChoiceId: "choice_test_fixture",
+        visibility: "developer_only",
+        justification: "Neutral test-only effect.",
+        magnitudeClassification: "unclassified",
+        applicableConditionIds: [],
+      }).success,
     ).toBe(true);
     expect(
       effectSchema.safeParse(

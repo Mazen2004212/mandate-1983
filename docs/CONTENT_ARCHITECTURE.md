@@ -148,17 +148,23 @@ Undefined fields, impossible ranges, and contradictory required conditions are b
 
 ## 12. Effect Contract
 
-Supported effect families are normalized-score, signed-weight, basis-point, and exact-money adjustments; setting and removing flags; creating memories; updating relationships, factions, regions, family, character availability, or intelligence assertions; scheduling delayed effects or media; creating or updating laws, measures, or projects; and triggering follow-up eligibility.
+Supported executable effect families are closed normalized-score adjustments for national and family fields; typed relationship, faction, faction-regional-influence, and regional score adjustments; economy and typed regional-unemployment basis-point adjustments; exact-money adjustments; typed existing-memory weight adjustments; setting and removing registered flags; creating registered memories; typed character availability; explicit law-or-measure membership; explicit regional project membership; scheduling registered delayed effects or media; and triggering registered follow-up eligibility.
 
 Every effect defines effect ID, type, target domain, target field or reference, operation, value, unit, source scenario and choice, visibility, justification, magnitude classification, and applicable conditions.
 
 Effects use `SYSTEMS_DESIGN.md` units: money in Crown cents, rates in basis points, and normalized scores as integers. They cannot invent fields. Out-of-budget authored magnitudes fail validation; runtime clamping cannot conceal invalid authored content. Only the authoritative mutation engine applies effects, in the defined order, and retries cannot apply an effect twice.
 
+Relationship effects identify a canonical NPC and one exact relationship field. Faction effects identify a canonical faction and either one exact score field or one canonical region for regional influence. Region effects identify a canonical region and an exact score or unemployment field. Memory-weight effects identify a registered memory that must already exist in runtime state. Regional project membership identifies both a registered project and canonical region; law-or-measure membership identifies the registered policy. Membership `add` is duplicate-safe, and `remove` is an idempotent no-op when the membership is absent.
+
+Family score changes use the existing closed `normalized_score_adjustment` family paths. Media sentiment remains immutable authored content and may only be scheduled through its stable media ID. Intelligence-assertion mutation is deferred because the authoritative root save has no intelligence runtime domain. The registry rejects ambiguous generic relationship, faction, region, family, intelligence, and project updates rather than accepting content that cannot execute.
+
 ## 13. Conditional Effects
 
-Every conditional effect defines the effect, required and excluded conditions, evaluation timing, stacking rule, and developer explanation. Timing is one of before base effects, after base effects, after relationship updates, after memory creation, or at period advancement.
+Every direct choice conditional effect defines the effect, required and excluded conditions, evaluation timing, stacking rule, and developer explanation. Timing is one of before base effects, after base effects, after relationship updates, or after memory creation. Direct `at_period_advancement` choice conditionals are invalid because the save has no persisted direct-conditional instance identity.
 
 Default choice resolution follows `SYSTEMS_DESIGN.md`; content cannot redefine global ordering. Conflicting changes to one field require explicit order or produce a validation error. Stacking is explicit, deterministic variation is not rerolled, and conditions use a documented state snapshot.
+
+Period-deferred behavior is authored as a registered delayed-effect definition. Conditions attached to delayed payload effects through `applicableConditionIds` are evaluated against authoritative state when that delayed effect becomes due. No synthetic pending ID or undocumented queue state is created.
 
 ## 14. Delayed-Effect Contract
 

@@ -5,17 +5,17 @@
 - Project phase: Domain foundation implementation
 - Current task: TASK-08
 - Current task title: Authoritative Mutation and Delayed-Effect Engine
-- Current task status: `blocked`
+- Current task status: `ready_for_review`
 - Current branch: `main`
 - Foundation baseline commit: `6979c02`
-- Latest verified baseline commit: `6fc571f`
+- Latest verified baseline commit: `16dc9ef`
 - Preview URL: None
 - Production URL: None
-- Active blocker: BLK-008 — technically corrected by the local mutation-persistence contract amendment; remains open pending review and commit
-- Last progress update: TASK-08 mutation-persistence contracts completed locally with focused and full regression evidence; no mutation engine was implemented
+- Active blocker: None
+- Last progress update: TASK-08 executable-effect correction completed; typed mutation contracts, delayed payload conditions, and the full local gate pass
 - Implementation tasks verified: 7 / 20
 
-TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. TASK-08 remains blocked pending review and commit of the local authoritative mutation-persistence contract amendment that technically corrects BLK-008. No preview or production deployment exists.
+TASK-01 through TASK-04 are verified and consolidated into the single canonical repository baseline commit `6979c02`. TASK-05 is verified at `0ba241f`. TASK-06 is verified through its original implementation commit `2ff7d49` and corrective condition-contract commit `c664ad4`. TASK-07 is verified at `6fc571f`. The mutation-persistence correction is committed at `16dc9ef`, BLK-008 is resolved, and TASK-08 is ready for review with no implementation commit. No preview or production deployment exists.
 
 ## 2. Task Table
 
@@ -28,7 +28,7 @@ TASK-01 through TASK-04 are verified and consolidated into the single canonical 
 | TASK-05 | Initial State and Political Backgrounds | B | `verified` | TASK-04 | `0ba241f` | Complete authoritative baseline, four apply-once backgrounds, strict deterministic factory, 36 new tests, 240-test suite, production build, and 7-project E2E regression passed; implementation reviewed and accepted | None |
 | TASK-06 | Content Schemas, Registries, and Manifest | B | `verified` | TASK-03 | `2ff7d49` (original); `c664ad4` (corrective contract) | Original implementation and numeric condition-contract correction reviewed, committed, and pushed; final corrective gate passed 291 tests and 7 E2E projects | None |
 | TASK-07 | Eligibility, Content Graphs, and Scenario Scheduler | B | `verified` | TASK-05, TASK-06 | `6fc571f` | 58 focused runtime tests; format, lint, typecheck, 349-test full suite, production build, 7-project E2E, deterministic/boundary scans, and zero-mutation checks passed; implementation reviewed, committed, and pushed | None |
-| TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `blocked` | TASK-05, TASK-07 | None | Mutation-persistence contract amendment complete locally: 23 new tests, 372-test full suite, production build, and 7-project E2E passed; engine implementation remains unstarted | BLK-008 technically corrected; pending review and commit |
+| TASK-08 | Authoritative Mutation and Delayed-Effect Engine | B | `ready_for_review` | TASK-05, TASK-07 | None | Pure atomic mutation engine plus strict executable-effect correction; frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, focused contract/runtime tests, and integrity scans passed | None |
 | TASK-09 | Economic, Government, Faction, Region, and Outcome Calculations | B | `not_started` | TASK-04, TASK-05 | None | None | None |
 | TASK-10 | Supabase Foundation, Authentication, and RLS | C | `not_started` | TASK-03 | None | None | None |
 | TASK-11 | Save Repository and Server Mutation Boundary | C | `not_started` | TASK-08, TASK-10 | None | None | None |
@@ -47,6 +47,28 @@ Foundation-document commits do not count as implementation-task completion.
 ## 3. Current Task Workspace
 
 The TASK-01 through TASK-04 workspace records below are historical execution evidence from before repository-history consolidation. Former short hashes are retained only as historical labels for those recorded sessions; they are not current Git objects and are not required to exist. The sole canonical current baseline is `6979c02`.
+
+### TASK-08 Implementation Workspace Record
+
+- Task ID: TASK-08
+- Objective: Implement a pure, framework-independent authoritative choice-resolution and one-period advancement engine over the committed mutation-history and delayed-effect snapshot contracts, without persistence or TASK-09 formulas.
+- Initial repository state: Clean `main` at canonical HEAD `16dc9ef`, tracking `origin/main`; `.git` present; TASK-01 through TASK-07 verified; BLK-008 resolved by the committed contract amendment; TASK-08 `not_started`; no TASK-09 formula implementation detected.
+- Baseline verification: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` passed before implementation; 17 test files and 372 tests passed. Build-generated `next-env.d.ts` changes were restored.
+- Architecture: Added strict input envelopes, structured result/failure contracts, persisted-history retry lookup, independent mutation context, closed effect dispatch, choice resolution, delayed execution, period advancement, and intentional exports under `src/content/runtime/mutation`. The layer has no React, Next.js, browser, filesystem, environment, clock, database, network, or mutable-global dependency.
+- Mutation order: Validates the envelope/save/immutable registry and persisted idempotency receipt before ordinary revision rejection; resolves scenario and choice; reconfirms eligibility and availability; validates all choice references; applies conditional timing, base effects, memories, flags, delayed snapshots, media, and follow-up eligibility; appends the committed receipt; increments revision once; and validates the complete save before returning.
+- Effect support: Deterministic closed dispatch covers national and family normalized scores; typed relationship, faction, faction-region, region, regional unemployment, and existing-memory adjustments; exact `MoneyMinor`; canonical character availability; registered memory and flag operations; explicit law and regional-project membership; and delayed, media, and follow-up scheduling. Every registry-valid effect has an executable representation; documented clamps, final-domain validation, and exact integer/`bigint` units are preserved. No system formula is calculated.
+- Atomicity and revision: Every accepted request works on a structured clone and returns either one fully schema-valid save or a structured failure carrying the unchanged original save. Choice resolution and period advancement increment revision exactly once; failure and retry do not increment it.
+- Idempotency and history: `eventHistory` is the only ledger. Exact persisted request identity returns `already_applied` before stale-revision rejection; conflicting reuse returns `idempotency_conflict`. Successful choice and period receipts preserve deterministic authored-ID evidence and retries neither duplicate history nor reapply effects.
+- Memories and flags: Only registered authored definitions can mutate state. Sources and creation periods must match. Character memories are linked to character state and the correct temporary/permanent relationship ledger; family-role memories link to family state. Replace/reject behavior, removable flags, and permanent-flag protection fail atomically where required.
+- Delayed effects: Resolution persists the committed definition snapshot and rejects scope collisions. Advancement selects pending due entries by trigger period, descending priority, and ASCII authored ID; evaluates cancellation, expiry, and prerequisites; executes payload/follow-up effects once; records executed/cancelled/expired/failed outcomes; and rolls back each failed payload according to `block_advancement`, `cancel`, or `mark_failed`.
+- Period advancement: Requires exactly the next political period, processes due registered delayed work, evaluates each delayed payload effect's applicable conditions against the due-period state, writes one period receipt, synchronizes both political-period fields, increments revision once, and validates the final save. Direct choice `at_period_advancement` conditionals are invalid authored content. Advancement deliberately performs no economy, government, faction, regional, relationship, security, international, family, memory-decay, or outcome formula.
+- Failure contract: Strict failures cover invalid input/save, unsupported versions, revision and idempotency conflicts, missing or mismatched content, ineligibility/unavailability, duplicate non-repeatable resolution, unknown effects, invalid targets/units, absent optional relationship fields, invalid regional final ranges, memory/flag constraints, delayed failures, and final validation. `unsupported_mutation_representation` remains only a defensive code for corrupted, unvalidated, or migrated data and is unreachable through the validated effect union. Player messages remain generic except for safe reload guidance on revision conflict.
+- Tests added: 62 neutral deterministic mutation tests and 45 focused executable-contract tests cover strict inputs, immutable registries, preconditions, atomic rollback, exact retries/conflicts, typed relationship/faction/region/family/memory/project/law effects, all required clamps and rejections, delayed payload conditions, revision/history evidence, scheduling, delayed terminal behavior, determinism, no formulas, and zero input mutation. The complete suite grew from 418 to 479 passing tests.
+- Final verification: Frozen install, format, lint, typecheck, 20-file/479-test full suite, production build, 7-project E2E, focused 62-test mutation suite, focused 45-test executable-contract suite, `git diff --check`, and scope/integrity scans passed. Build-generated `next-env.d.ts` changes were restored.
+- Boundary confirmation: No TASK-09 formula, UI, production content, package, lockfile, Supabase, SQL, migration, authentication, environment, API, database, persistence, generated ID, current-time read, direct randomness, `eval`, `Function` constructor, broad `any`, suppression, unsafe cast, secret, generated tracked artifact, nested `.git`, staging, commit, or push was added.
+- Known limitations: Intelligence-assertion mutation remains intentionally deferred because the authoritative root state has no intelligence runtime domain. Media sentiment remains immutable authored content. Deferred choice behavior must use registered delayed effects rather than direct `at_period_advancement` conditionals. These are schema boundaries, not normal runtime unsupported paths.
+- Implementation commit: None; changes are unstaged and uncommitted as required.
+- Review decision: Ready for review
 
 ### TASK-08 Corrective Mutation-Persistence Contract Amendment Workspace Record
 
@@ -321,6 +343,7 @@ The rows below preserve historical command and acceptance evidence. Any pre-cons
 | 2026-08-03 | TASK-07 | Deterministic eligibility, graph, and scheduler implementation | Frozen install; format; lint; typecheck; 349-test suite; production build; 7-project E2E; fixed-seed, explanation-safety, graph-order, zero-mutation, scope, generated-output, and Git-integrity checks | Local Windows | Ready for review; all final required commands passed | `src/content/runtime/**`, `src/content/index.ts`, `src/content/condition-contract-amendment.test.ts`, `docs/PROGRESS.md` | Codex | First full test run found one obsolete TASK-06 no-evaluator assertion (335/336); corrected for the new task boundary, then all 349 passed. No staging, commit, push, production content, UI, persistence, formula, or TASK-08 work. |
 | 2026-08-04 | TASK-08 | Preflight, baseline, and authoritative mutation-contract audit | Clean root/branch/HEAD verification; governing documents and four activated skills; complete domain/content architecture inspection; frozen install; format; lint; typecheck; 349-test suite; production build | Local Windows | Baseline passed; TASK-08 blocked before source implementation | `src/domain/schemas/state/runtime.ts`, `src/domain/schemas/save/save-schemas.ts`, `src/content/schemas/runtime-content.ts`, `docs/PROGRESS.md` | Codex | Existing strict save/history cannot persist choice-mutation idempotency request identity; delayed runtime state also omits authored expiry/failure behavior. No TASK-08 or TASK-09 source was added. |
 | 2026-08-04 | TASK-08 | Corrective mutation-persistence contract amendment | Strict receipt union, idempotency and delayed-snapshot invariants, TASK-07 compatibility, focused 77-test run, frozen install, format, lint, typecheck, 372-test suite, production build, 7-project E2E, boundary and Git-integrity checks | Local Windows | Ready for review; BLK-008 technically corrected but open pending review and commit | `docs/SYSTEMS_DESIGN.md`, `src/domain/schemas/state/**`, shared classifications, TASK-07 compatibility files, focused tests, `docs/PROGRESS.md` | Codex | 23 new tests; unchanged `schema-1.0.0`; no mutation engine, executor, formula, persistence implementation, staging, commit, or push. |
+| 2026-08-04 | TASK-08 | Authoritative mutation and delayed-effect engine plus executable-effect correction | Pure choice resolution, closed typed effect dispatch, history-ledger retries, delayed execution and payload conditions, one-period advancement, 62 mutation tests, 45 focused contract tests, frozen install, format, lint, typecheck, 479-test suite, production build, 7-project E2E, boundary and Git-integrity checks | Local Windows | Ready for review; every required command passed | `docs/CONTENT_ARCHITECTURE.md`, `docs/SYSTEMS_DESIGN.md`, `src/content/{constants.ts,registry.ts,schemas/effects.ts,effect-contract-correction.test.ts,runtime/**}`, `docs/PROGRESS.md` | Codex | BLK-008 resolved at committed HEAD `16dc9ef`; ambiguous effect and direct at-period shapes are rejected before runtime; all accepted MVP effects execute deterministically; no formula, persistence, UI, staging, commit, or push. |
 
 An unexecuted command must not be entered as passed evidence.
 
@@ -333,6 +356,7 @@ An unexecuted command must not be entered as passed evidence.
 | DEC-007 | 2026-08-03 | TASK-07 | Stop before runtime implementation | Required eligibility concepts could not be represented by the accepted TASK-06 condition schemas, and a runtime-only alternate contract would violate the instruction not to duplicate or redefine them | Invent runtime-only variants; silently omit required operators; alter the accepted schema without specification review | `docs/PROGRESS.md` only | Codex | Review and commit the implemented TASK-06 correction before TASK-07 restarts |
 | DEC-008 | 2026-08-04 | TASK-08 | Stop before mutation implementation | Existing strict save/history state cannot store the accepted idempotency key and request identity required to return exact retries safely and reject conflicting key reuse | Add undocumented state fields; misuse delayed-effect keys; process-global cache; weaken retry/conflict guarantees | `docs/PROGRESS.md` only | Codex | Specification owner must approve compatible save/history and delayed-runtime schema changes, then restart TASK-08 from a clean reviewed commit |
 | DEC-009 | 2026-08-04 | TASK-08 | Adopt mutation-persistence owner decisions | The approved contract makes event history the sole globally unique mutation ledger and persists delayed execution snapshots without a new root domain or schema-version change | Add a separate ledger domain; hash requests; generate receipt IDs; derive delayed behavior from mutable registry content | `docs/SYSTEMS_DESIGN.md`, domain/content schemas, TASK-07 compatibility tests, `docs/PROGRESS.md` | Specification owner | Review and commit this corrective amendment before restarting the TASK-08 engine implementation |
+| DEC-010 | 2026-08-04 | TASK-08 | Narrow pre-publication effects to complete executable contracts | A validated authored effect must have every target, field, value, unit, and operation needed for deterministic mutation; ambiguous shapes cannot remain normal runtime failures | Invent targets or values; silently skip effects; accept content that later returns unsupported | `docs/CONTENT_ARCHITECTURE.md`, `docs/SYSTEMS_DESIGN.md`, effect schemas/registry/runtime/tests, `docs/PROGRESS.md` | Specification owner | Intelligence mutation remains deferred until a versioned runtime-state domain exists; all current accepted effects are executable |
 
 Use this log for deliberate deviations from the roadmap or authoritative documents.
 
@@ -342,7 +366,7 @@ Use this log for deliberate deviations from the roadmap or authoritative documen
 |---|---|---|---|---|---|---|---|
 | BLK-005 | TASK-05 | Blocking | The provisional baseline could not satisfy the strict TASK-03 root/save schemas without inventing multiple required values and collections; starting revision and supported save/schema literals were also unspecified | Prior authority audit against `SYSTEMS_DESIGN.md` section 31 and TASK-03 schemas | Specification owner | Completed in `MVP Initial State Completion Decisions` | Resolved |
 | BLK-007 | TASK-07 | Blocking | Accepted TASK-06 schemas could not encode political-period conditions or numeric relationship, faction, and normalized-region score conditions required by TASK-07 | `src/content/schemas/conditions.ts`; `src/content/constants.ts`; `SYSTEMS_DESIGN.md` sections 26–27 | Specification owner | Completed by reviewed corrective commit `c664ad4` | Resolved |
-| BLK-008 | TASK-08 | Blocking | Accepted authoritative save/history state lacked persisted choice-mutation identity and queued delayed expiry/failure behavior | Corrective amendment in `docs/SYSTEMS_DESIGN.md`, `src/domain/schemas/state/runtime.ts`, `src/domain/schemas/state/root-state.ts`, shared classifications, and 23 new tests | Specification owner | Review and commit the technically complete mutation-persistence contract amendment before TASK-08 engine implementation restarts | Technically corrected; open pending review and commit |
+| BLK-008 | TASK-08 | Blocking | Accepted authoritative save/history state lacked persisted choice-mutation identity and queued delayed expiry/failure behavior | Corrective amendment reviewed, committed, and pushed as `16dc9ef` | Specification owner | Completed by committed mutation-persistence contracts before TASK-08 restarted | Resolved |
 
 A blocker remains in the history even if work moves to another task.
 
@@ -377,7 +401,7 @@ Warnings cannot be accepted implicitly.
 | Post-deployment verification | Not evaluated |
 
 - Final release decision: Incomplete evaluation
-- Reason: Release evaluation remains outside this documentation-only history reconciliation; no deployment or production gate was requested.
+- Reason: TASK-08 passed its required local implementation gate, but release-candidate evaluation and deployment remain outside this task.
 
 ## 9. Progress Update Rules
 
@@ -396,10 +420,10 @@ Warnings cannot be accepted implicitly.
 ## 10. Document Status
 
 - Status: Active progress tracker
-- Implementation status: TASK-01 through TASK-07 verified; TASK-08 blocked
+- Implementation status: TASK-01 through TASK-07 verified; TASK-08 ready for review after executable-effect correction
 - Current task: TASK-08
 - Foundation baseline commit: `6979c02`
 - Implementation tasks verified: 7 / 20
 - Preview deployment: None
 - Production deployment: None
-- Release decision: TASK-08 corrective contract amendment ready for review; BLK-008 remains open pending review and commit, and no release or publication is authorized
+- Release decision: TASK-08 is ready for implementation review; no release or publication is authorized

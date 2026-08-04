@@ -560,29 +560,44 @@ export function buildContentRegistry(input: unknown): ContentRegistryResult {
       );
     const referencedRegistry =
       effect.type === "set_flag" || effect.type === "remove_flag"
-        ? "flags"
+        ? {
+            registry: "flags" as const,
+            id: effect.targetReference,
+            field: "targetReference",
+          }
         : effect.type === "create_memory"
-          ? "memories"
-          : effect.type === "update_faction"
-            ? "factions"
-            : effect.type === "update_region"
-              ? "regions"
-              : effect.type === "update_intelligence_assertion"
-                ? "intelligenceAssertions"
-                : effect.type === "create_or_update_law" ||
-                    effect.type === "create_or_update_measure"
-                  ? "lawsAndMeasures"
-                  : effect.type === "create_or_update_project"
-                    ? "projects"
-                    : undefined;
-    if (referencedRegistry !== undefined && "targetReference" in effect)
+          ? {
+              registry: "memories" as const,
+              id: effect.targetReference,
+              field: "targetReference",
+            }
+          : effect.type === "memory_weight_adjustment"
+            ? {
+                registry: "memories" as const,
+                id: effect.memoryId,
+                field: "memoryId",
+              }
+            : effect.type === "law_or_measure_membership"
+              ? {
+                  registry: "lawsAndMeasures" as const,
+                  id: effect.lawOrMeasureId,
+                  field: "lawOrMeasureId",
+                }
+              : effect.type === "region_project_membership"
+                ? {
+                    registry: "projects" as const,
+                    id: effect.projectId,
+                    field: "projectId",
+                  }
+                : undefined;
+    if (referencedRegistry !== undefined)
       addReferenceIssue(
         issues,
         sets,
-        referencedRegistry,
-        effect.targetReference,
+        referencedRegistry.registry,
+        referencedRegistry.id,
         effect.id,
-        ["effects", effect.id, "targetReference"],
+        ["effects", effect.id, referencedRegistry.field],
       );
   });
   delayedEffects.forEach((definition) => {

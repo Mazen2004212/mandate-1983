@@ -277,6 +277,22 @@ Mutation retries use this authoritative order:
 
 Receipt arrays reject duplicate authored IDs. Period-advance terminal delayed-effect groups are mutually exclusive within a receipt. Receipts contain no player-facing prose, generated IDs, request digests, or new hashes. Complete retained history is not assumed, so revision transitions are validated per receipt without requiring the retained entries to form a contiguous sequence from zero.
 
+### MVP Executable Effect Completion Decisions
+
+For the pre-publication `schema-1.0.0` contract, every effect accepted by the validated content registry has one complete authoritative runtime mutation representation. Ambiguous generic update shapes are invalid authored content rather than normal runtime failures.
+
+Relationship score effects identify one canonical NPC, one of `trust`, `respect`, `fear`, `affection`, `ideologicalAlignment`, `personalLeverage`, `publicRelationship`, or `privateRelationship`, and an integer `-100..100` delta. Faction score effects identify one canonical faction and one documented faction score. Faction regional influence additionally identifies one canonical region. Region score effects identify one canonical region and one documented normalized field. These normalized results use `clamp100`; an optional relationship field such as `affection` must already exist for the target or the complete mutation fails atomically.
+
+Economy basis-point effects retain their closed economy targets. Regional unemployment uses a separate effect containing canonical `regionId`, field `unemploymentBps`, an integer basis-point delta, and final validation against `0..4000`; the complete mutation fails rather than clamping when the regional final value is invalid. Family changes use the existing closed `family.*` normalized-score paths.
+
+Memory-weight effects identify a registered memory that already exists in runtime state and one of `emotionalWeight` or `politicalWeight`. Signed-weight results are bounded to `-100..100`. Media sentiment is immutable authored content, not mutable save state; media is scheduled only by stable media ID.
+
+Regional project membership identifies a canonical region, registered project ID, and `add` or `remove`. Law-or-measure membership identifies a registered policy and the same explicit operations. `add` is duplicate-safe. `remove` deletes an existing membership and is an idempotent no-op when absent. Unknown registry references fail validation, while corrupted or migrated runtime references fail the complete mutation atomically.
+
+The generic `update_relationship`, `update_faction`, `update_region`, `update_family`, `update_intelligence_assertion`, and `create_or_update_project` shapes are not accepted. Intelligence mutation remains deferred until an authoritative intelligence runtime-state domain is approved.
+
+Direct choice conditional effects do not accept `at_period_advancement`. Period-deferred behavior uses a registered delayed-effect definition whose persisted snapshot supplies identity and queue state. Each delayed payload effect evaluates its own `applicableConditionIds` when due. No synthetic ID or additional pending-effect domain is introduced.
+
 ## 12. MVP Economic State
 
 Authoritative exact-money fields are `treasuryMinor`, `monthlyRevenueMinor`, `monthlyExpenditureMinor`, `monthlyDebtServiceMinor`, `arrearsMinor`, `plannedArrearsPaymentMinor`, `periodFinancingInflowsMinor`, and `periodProjectOutflowsMinor`.

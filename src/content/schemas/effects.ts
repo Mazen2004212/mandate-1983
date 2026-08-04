@@ -2,6 +2,9 @@ import { z } from "zod";
 
 import {
   basisPointsSchema,
+  canonicalCharacterIdSchema,
+  canonicalFactionIdSchema,
+  canonicalRegionIdSchema,
   characterAvailabilitySchema,
   signedWeightSchema,
   stateVisibilitySchema,
@@ -9,8 +12,11 @@ import {
 import {
   BASIS_POINT_STATE_FIELDS,
   CONDITIONAL_EFFECT_TIMINGS,
+  FACTION_SCORE_FIELDS,
   MONEY_STATE_FIELDS,
   NORMALIZED_STATE_FIELDS,
+  REGION_SCORE_FIELDS,
+  RELATIONSHIP_SCORE_FIELDS,
 } from "../constants";
 import {
   choiceContentIdSchema,
@@ -18,7 +24,10 @@ import {
   contentObjectIdSchema,
   delayedEffectContentIdSchema,
   effectContentIdSchema,
+  lawOrMeasureContentIdSchema,
   mediaContentIdSchema,
+  memoryContentIdSchema,
+  projectContentIdSchema,
   scenarioContentIdSchema,
 } from "../ids";
 import { boundedText, contentMoneyMinorSchema } from "./common";
@@ -33,6 +42,8 @@ const effectBase = {
   applicableConditionIds: z.array(conditionContentIdSchema),
 } as const;
 
+const normalizedDeltaSchema = z.number().int().min(-100).max(100);
+
 export const normalizedScoreEffectSchema = z
   .object({
     ...effectBase,
@@ -46,7 +57,7 @@ export const normalizedScoreEffectSchema = z
     ]),
     targetField: z.enum(NORMALIZED_STATE_FIELDS),
     operation: z.literal("adjust"),
-    value: z.number().int().min(-100).max(100),
+    value: normalizedDeltaSchema,
     unit: z.literal("normalized_score"),
   })
   .strict()
@@ -58,50 +69,89 @@ export const normalizedScoreEffectSchema = z
     },
   );
 
-export const signedWeightEffectSchema = z
+export const relationshipScoreEffectSchema = z
   .object({
     ...effectBase,
-    type: z.literal("signed_weight_adjustment"),
-    targetDomain: z.enum(["memory", "media"]),
-    targetField: z.enum([
-      "memory.emotionalWeight",
-      "memory.politicalWeight",
-      "media.sentiment",
-    ]),
+    type: z.literal("relationship_score_adjustment"),
+    characterId: canonicalCharacterIdSchema,
+    field: z.enum(RELATIONSHIP_SCORE_FIELDS),
+    operation: z.literal("adjust"),
+    value: normalizedDeltaSchema,
+    unit: z.literal("normalized_score"),
+  })
+  .strict();
+
+export const factionScoreEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("faction_score_adjustment"),
+    factionId: canonicalFactionIdSchema,
+    field: z.enum(FACTION_SCORE_FIELDS),
+    operation: z.literal("adjust"),
+    value: normalizedDeltaSchema,
+    unit: z.literal("normalized_score"),
+  })
+  .strict();
+
+export const factionRegionalInfluenceEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("faction_regional_influence_adjustment"),
+    factionId: canonicalFactionIdSchema,
+    regionId: canonicalRegionIdSchema,
+    operation: z.literal("adjust"),
+    value: normalizedDeltaSchema,
+    unit: z.literal("normalized_score"),
+  })
+  .strict();
+
+export const regionScoreEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("region_score_adjustment"),
+    regionId: canonicalRegionIdSchema,
+    field: z.enum(REGION_SCORE_FIELDS),
+    operation: z.literal("adjust"),
+    value: normalizedDeltaSchema,
+    unit: z.literal("normalized_score"),
+  })
+  .strict();
+
+export const memoryWeightEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("memory_weight_adjustment"),
+    memoryId: memoryContentIdSchema,
+    field: z.enum(["emotionalWeight", "politicalWeight"]),
     operation: z.literal("adjust"),
     value: signedWeightSchema,
     unit: z.literal("signed_weight"),
   })
-  .strict()
-  .refine(
-    (effect) => effect.targetField.startsWith(`${effect.targetDomain}.`),
-    {
-      path: ["targetField"],
-      message: "Signed-weight field must belong to its target domain.",
-    },
-  );
+  .strict();
 
 export const basisPointEffectSchema = z
   .object({
     ...effectBase,
     type: z.literal("basis_point_adjustment"),
-    targetDomain: z.enum(["economy", "region"]),
+    targetDomain: z.literal("economy"),
     targetField: z.enum(BASIS_POINT_STATE_FIELDS),
     operation: z.literal("adjust"),
     value: basisPointsSchema,
     unit: z.literal("basis_points"),
   })
-  .strict()
-  .refine(
-    (effect) =>
-      effect.targetDomain === "economy"
-        ? effect.targetField.startsWith("economy.")
-        : effect.targetField.startsWith("regions."),
-    {
-      path: ["targetField"],
-      message: "Basis-point field must belong to its target domain.",
-    },
-  );
+  .strict();
+
+export const regionBasisPointEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("region_basis_point_adjustment"),
+    regionId: canonicalRegionIdSchema,
+    field: z.literal("unemploymentBps"),
+    operation: z.literal("adjust"),
+    value: basisPointsSchema,
+    unit: z.literal("basis_points"),
+  })
+  .strict();
 
 export const moneyEffectSchema = z
   .object({
@@ -118,32 +168,10 @@ export const moneyEffectSchema = z
 export const referenceEffectSchema = z
   .object({
     ...effectBase,
-    type: z.enum([
-      "set_flag",
-      "remove_flag",
-      "create_memory",
-      "update_relationship",
-      "update_faction",
-      "update_region",
-      "update_family",
-      "update_intelligence_assertion",
-      "create_or_update_law",
-      "create_or_update_measure",
-      "create_or_update_project",
-    ]),
-    targetDomain: z.enum([
-      "flag",
-      "memory",
-      "relationship",
-      "faction",
-      "region",
-      "family",
-      "intelligence",
-      "law_or_measure",
-      "project",
-    ]),
+    type: z.enum(["set_flag", "remove_flag", "create_memory"]),
+    targetDomain: z.enum(["flag", "memory"]),
     targetReference: contentObjectIdSchema,
-    operation: z.enum(["set", "remove", "create", "update"]),
+    operation: z.enum(["set", "remove", "create"]),
     value: z.union([contentObjectIdSchema, boundedText(1, 200)]),
     unit: z.literal("reference"),
   })
@@ -153,14 +181,6 @@ export const referenceEffectSchema = z
       set_flag: ["flag", "set"],
       remove_flag: ["flag", "remove"],
       create_memory: ["memory", "create"],
-      update_relationship: ["relationship", "update"],
-      update_faction: ["faction", "update"],
-      update_region: ["region", "update"],
-      update_family: ["family", "update"],
-      update_intelligence_assertion: ["intelligence", "update"],
-      create_or_update_law: ["law_or_measure", "update"],
-      create_or_update_measure: ["law_or_measure", "update"],
-      create_or_update_project: ["project", "update"],
     } as const;
     const [domain, operation] = contracts[effect.type];
     if (effect.targetDomain !== domain || effect.operation !== operation) {
@@ -172,12 +192,33 @@ export const referenceEffectSchema = z
     }
   });
 
+export const lawOrMeasureMembershipEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("law_or_measure_membership"),
+    lawOrMeasureId: lawOrMeasureContentIdSchema,
+    operation: z.enum(["add", "remove"]),
+    unit: z.literal("reference"),
+  })
+  .strict();
+
+export const regionProjectMembershipEffectSchema = z
+  .object({
+    ...effectBase,
+    type: z.literal("region_project_membership"),
+    regionId: canonicalRegionIdSchema,
+    projectId: projectContentIdSchema,
+    operation: z.enum(["add", "remove"]),
+    unit: z.literal("reference"),
+  })
+  .strict();
+
 export const characterAvailabilityEffectSchema = z
   .object({
     ...effectBase,
     type: z.literal("update_character_availability"),
     targetDomain: z.literal("character"),
-    targetReference: contentObjectIdSchema,
+    targetReference: canonicalCharacterIdSchema,
     operation: z.literal("set"),
     value: characterAvailabilitySchema,
     unit: z.literal("availability"),
@@ -219,10 +260,17 @@ export const schedulingEffectSchema = z
 
 export const effectSchema = z.discriminatedUnion("type", [
   normalizedScoreEffectSchema,
-  signedWeightEffectSchema,
+  relationshipScoreEffectSchema,
+  factionScoreEffectSchema,
+  factionRegionalInfluenceEffectSchema,
+  regionScoreEffectSchema,
+  memoryWeightEffectSchema,
   basisPointEffectSchema,
+  regionBasisPointEffectSchema,
   moneyEffectSchema,
   referenceEffectSchema,
+  lawOrMeasureMembershipEffectSchema,
+  regionProjectMembershipEffectSchema,
   characterAvailabilityEffectSchema,
   schedulingEffectSchema,
 ]);
